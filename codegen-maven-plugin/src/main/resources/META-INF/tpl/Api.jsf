@@ -1,0 +1,54 @@
+import request from '@/utils/request'
+
+/**
+ * ${tbl.comment}API
+ * @type {{get: string, save: string, update: string, list: string, delete${tbl.entityName}: string}}
+ */
+
+const ${tbl.propsName}Api = {
+  list: '/${tbl.propsName}/list',
+  save: '/${tbl.propsName}/save',
+  update: '/${tbl.propsName}/update',
+  delete: '/${tbl.propsName}/delete',
+  get: '/${tbl.propsName}/get'
+}
+
+export default ${tbl.propsName}Api
+
+export function list (parameter) {
+  return request({
+    url: ${tbl.propsName}Api.list,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function save (parameter) {
+  return request({
+    url: ${tbl.propsName}Api.save,
+    method: 'put',
+    data: parameter
+  })
+}
+
+export function update (parameter) {
+  return request({
+    url: ${tbl.propsName}Api.update,
+    method: 'patch',
+    data: parameter
+  })
+}
+
+export function delete${tbl.entityName} (id) {
+  return request({
+    url: <#noparse>`${</#noparse>${tbl.propsName}Api<#noparse>.delete}/${id}`</#noparse>,
+    method: 'delete'
+  })
+}
+
+export function get (id) {
+  return request({
+    url: <#noparse>`${</#noparse>${tbl.propsName}Api<#noparse>.get}/${id}`</#noparse>,
+    method: 'get'
+  })
+}

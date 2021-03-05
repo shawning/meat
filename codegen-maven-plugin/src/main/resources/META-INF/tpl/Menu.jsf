@@ -1,0 +1,7 @@
+
+          {
+            path: '/${tbl.propsName}/list',
+            name: '${tbl.propsName}',
+            component: () => import('@/views/${tbl.propsName}/${tbl.entityName}List'),
+            meta: { title: '${tbl.comment}', icon: 'form', keepAlive: false, permission: [ 'admin' ] }
+          }

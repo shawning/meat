@@ -1,0 +1,55 @@
+package ${basePackage}.vo;
+
+import ${mainGroup}.core.support.PageVo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * @author ${author}
+ */
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(description = "${tbl.comment}列表查询入参")
+public class ${tbl.entityName}Vo extends PageVo {
+    <#list tbl.fields as field>
+    <#if field.propsName!='id'
+            &&field.propsName!='isAvailable'
+            &&field.propsName!='createName'
+            &&field.propsName!='createByName'
+            &&field.propsName!='updateByName'
+            &&field.propsName!='updateName'
+            &&field.propsName!='createTime'
+            &&field.propsName!='createDate'
+            &&field.propsName!='updateTime'
+            &&field.propsName!='updateDate'
+            &&field.propsName!='createBy'
+            &&field.propsName!='updateBy'>
+    <#if field.dbColumnType.type=='String'>
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.dbColumnType.type} ${field.propsName};
+    <#elseif field.dbColumnType.type=='Date'>
+    <#if field.required==true>
+    @ApiModelProperty(value = "${field.comment}", example = "2019-05-05 00:00:00", required = true)
+    <#else>
+    @ApiModelProperty(value = "${field.comment}", example = "2019-05-05 00:00:00")
+    </#if>
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private ${field.dbColumnType.type} ${field.propsName};
+    <#else>
+    <#if field.required==true>
+    @ApiModelProperty(value = "${field.comment}", example = "0", required = true)
+    <#else>
+    @ApiModelProperty(value = "${field.comment}", example = "0")
+    </#if>
+    private ${field.dbColumnType.type} ${field.propsName };
+    </#if>
+    </#if>
+    </#list>
+}

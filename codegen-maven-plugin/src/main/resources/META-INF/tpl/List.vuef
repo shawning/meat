@@ -1,0 +1,388 @@
+<template>
+  <page-header-wrapper>
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="horizontal" :label-col="{ span: 7 }" :wrapper-col="{ span: 17 }">
+          <a-row :gutter="48">
+<#list tbl.commonFields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='createDate' && field.propsName!='createByName' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>
+    <#if field.dbColumnType.uiElement=='input'>
+     <#if field.optionType.type==2>
+            <a-col :md="7" :sm="24">
+              <a-form-item label="${field.comment}">
+                <a-select v-model="queryParam.${field.propsName}" allowClear>
+                  <a-select-option value="">全部</a-select-option>
+                  <#list field.options as option>
+                  <a-select-option value="${option.optionKey}">${option.optionName}</a-select-option>
+                  </#list>
+                </a-select>
+              </a-form-item>
+            </a-col>
+     <#else>
+            <a-col :md="7" :sm="24">
+              <a-form-item label="${field.comment}">
+                <a-input v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请输入${field.comment}" allow-clear />
+              </a-form-item>
+            </a-col>
+     </#if>
+    <#elseif field.dbColumnType.uiElement=='date-picker'>
+            <a-col :md="7" :sm="24">
+              <a-form-item label="${field.comment}">
+                <a-date-picker show-time v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请选择${field.comment}" allow-clear />
+              </a-form-item>
+            </a-col>
+    <#elseif field.dbColumnType.uiElement=='input-number'>
+     <#if field.optionType.type==1>
+            <a-col :md="7" :sm="24">
+              <a-form-item label="${field.comment}">
+                <a-select v-model="queryParam.${field.propsName}" allowClear>
+                  <a-select-option value="">全部</a-select-option>
+                  <#list field.options as option>
+                  <a-select-option :value="${option.optionKey}">${option.optionName}</a-select-option>
+                  </#list>
+                </a-select>
+              </a-form-item>
+            </a-col>
+     <#else>
+            <a-col :md="7" :sm="24">
+              <a-form-item label="${field.comment}">
+                <a-input-number style="width: 266px" v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请输入${field.comment}" <#if field.dbColumnType.digitsStatus==true>:max="${field.integerLength}" :step="0.01"</#if> />
+              </a-form-item>
+            </a-col>
+     </#if>
+    <#else>
+            <a-col :md="7" :sm="24">
+              <a-form-item label="${field.comment}">
+                <a-input allow-clear v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请输入${field.comment}"/>
+              </a-form-item>
+            </a-col>
+    </#if>
+  </#if>
+</#list>
+<#if tbl.advanced == true>
+            <template v-if="advanced">
+</#if>
+<#list tbl.advancedFields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='createDate' && field.propsName!='createByName' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>
+    <#if field.dbColumnType.uiElement=='input'>
+     <#if field.optionType.type==2>
+               <a-col :md="7" :sm="24">
+                <a-form-item label="${field.comment}">
+                  <a-select v-model="queryParam.${field.propsName}" allowClear>
+                    <a-select-option value="">全部</a-select-option>
+                    <#list field.options as option>
+                    <a-select-option value="${option.optionKey}">${option.optionName}</a-select-option>
+                    </#list>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+     <#else>
+              <a-col :md="7" :sm="24">
+                <a-form-item label="${field.comment}">
+                  <a-input v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请输入${field.comment}" allow-clear />
+                </a-form-item>
+              </a-col>
+     </#if>
+    <#elseif field.dbColumnType.uiElement=='date-picker'>
+              <a-col :md="7" :sm="24">
+                <a-form-item label="${field.comment}">
+                  <a-date-picker show-time v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请选择${field.comment}" allow-clear />
+                </a-form-item>
+              </a-col>
+    <#elseif field.dbColumnType.uiElement=='input-number'>
+     <#if field.optionType.type==1>
+               <a-col :md="7" :sm="24">
+                 <a-form-item label="${field.comment}">
+                   <a-select v-model="queryParam.${field.propsName}" allowClear>
+                    <a-select-option value="">全部</a-select-option>
+                    <#list field.options as option>
+                    <a-select-option :value="${option.optionKey}">${option.optionName}</a-select-option>
+                    </#list>
+                   </a-select>
+                 </a-form-item>
+               </a-col>
+     <#else>
+              <a-col :md="7" :sm="24">
+                <a-form-item label="${field.comment}">
+                  <a-input-number style="width: 266px" v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请输入${field.comment}" <#if field.dbColumnType.digitsStatus==true>:max="${field.integerLength}" :step="0.01"</#if> />
+                </a-form-item>
+              </a-col>
+     </#if>
+    <#else>
+              <a-col :md="7" :sm="24">
+                <a-form-item label="${field.comment}">
+                  <a-input allow-clear v-model="queryParam.${field.propsName}" @pressEnter="$refs.table.refresh(true)" placeholder="请输入${field.comment}"/>
+                </a-form-item>
+              </a-col>
+    </#if>
+  </#if>
+</#list>
+<#if tbl.advanced == true>
+            </template>
+</#if>
+          </a-row>
+          <a-row>
+            <a-col :span="24" :style="{ textAlign: 'right' }">
+              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button style="margin-left: 8px" @click="reset">重置</a-button>
+<#if tbl.advanced == true>
+              <a @click="toggleAdvanced" style="margin-left: 8px">
+                {{ advanced ? '收起' : '展开' }}
+                <a-icon :type="advanced ? 'up' : 'down'"/>
+              </a>
+</#if>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+
+      <div class="table-operator">
+        <a-button type="primary" icon="plus" @click="$refs.${tbl.propsName}Model.add()">新增</a-button>
+      </div>
+
+      <s-table
+        ref="table"
+        size="default"
+        style="margin-top: 15px"
+        :rowKey="record => record.id"
+        :columns="columns"
+        :scroll="{ x: 1500}"
+        :data="loadData"
+        :pagination="pagination"
+      >
+<#list tbl.fields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable'>
+    <#if field.optionType.type==2 || field.optionType.type==1>
+        <span slot="${field.propsName}Render" slot-scope="text">
+          <a-tag :color="text | ${field.propsName}FilterColor">{{ text | ${field.propsName}FilterText }}</a-tag>
+        </span>
+    </#if>
+  </#if>
+</#list>
+
+        <span slot="action" slot-scope="text, record">
+          <template>
+            <a @click="handleEdit(record)">编辑</a>
+            <a-divider type="vertical"/>
+            <a-popconfirm
+              title="确定删除吗?"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="confirm(record)"
+              @cancel="cancel">
+              <a href="#">删除</a>
+            </a-popconfirm>
+            <a-divider type="vertical"/>
+            <a @click="handleDetail(record)">查看</a>
+          </template>
+        </span>
+      </s-table>
+    </a-card>
+    <${tbl.lowEntityNameMiddleLine}-form ref="${tbl.propsName}Model" @ok="handleOk"/>
+  </page-header-wrapper>
+</template>
+
+<script>
+  import ${tbl.entityName}Form from './modules/${tbl.entityName}Form'
+  import { Ellipsis, STable } from '@/components'
+  import { list, delete${tbl.entityName} } from '@/api/${tbl.propsName}Api'
+
+<#list tbl.fields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable'>
+    <#if field.optionType.type==1>
+  const ${field.propsName}StatusMap = {
+    <#list field.options as option>
+    ${option.optionKey}: {
+      color: 'green',
+      text: '${option.optionName}'
+    }<#if option_index != (((field.options)?size)-1)>,</#if>
+    </#list>
+  }
+    </#if>
+    <#if field.optionType.type==2>
+  const ${field.propsName}StatusMap = {
+    <#list field.options as option>
+    '${option.optionKey}': {
+      color: 'green',
+      text: '${option.optionName}'
+    }<#if option_index != (((field.options)?size)-1)>,</#if>
+    </#list>
+  }
+    </#if>
+  </#if>
+</#list>
+
+  export default {
+    name: '${tbl.entityName}',
+    components: {
+      STable,
+      Ellipsis,
+      ${tbl.entityName}Form
+    },
+    data () {
+      return {
+        pagination: {
+          defaultPageSize: 10,
+          <#noparse>showTotal: total => `共 ${total} 条`,</#noparse>
+          showSizeChanger: true,
+          showQuickJumper: true,
+          simple: false,
+          hideOnSinglePage: false,
+          pageSizeOptions: ['10', '20', '30', '40', '50', '100'],
+          onShowSizeChange: (current, pageSize) => {
+            this.pageSize = pageSize
+          }
+        },
+        mdl: {},
+<#if tbl.advanced == true>
+        // 高级搜索 展开/关闭
+        advanced: false,
+</#if>
+        // 查询参数
+        queryParam: {},
+        // 表头
+        columns: [
+<#list tbl.fields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>
+          {
+            title: '${field.comment}',
+            width: '170px',
+    <#if field.optionType.type==1 || field.optionType.type==2>
+            dataIndex: '${field.propsName}',
+            scopedSlots: { customRender: '${field.propsName}Render' }
+    <#else>
+            dataIndex: '${field.propsName}'
+    </#if>
+          },
+  </#if>
+</#list>
+          {
+            title: '操作',
+            dataIndex: 'action',
+            width: '150px',
+            align: 'center',
+            fixed: 'right',
+            scopedSlots: { customRender: 'action' }
+          }
+        ],
+        // 加载数据方法 必须为 Promise 对象
+        loadData: parameter => {
+          const param = {
+            currentPage: parameter.pageNo,
+            pageSize: parameter.pageSize
+          }
+          Object.assign(param, this.queryParam)
+          return list(param).then(result => {
+            return {
+              pageNo: result.pagination.current,
+              pageSize: result.pagination.pageSize,
+              totalCount: result.pagination.total,
+              data: result.list
+            }
+          })
+        },
+        selectedRowKeys: [],
+        selectedRows: [],
+
+        // custom table alert & rowSelection
+        options: {
+          alert: {
+            show: true,
+            clear: () => {
+              this.selectedRowKeys = []
+            }
+          },
+
+          rowSelection: {
+            selectedRowKeys: this.selectedRowKeys,
+            onChange: this.onSelectChange
+            /* type: 'radio' */
+          }
+        },
+        optionAlertShow: false
+      }
+    },
+    filters: {
+<#list tbl.selectfields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable'>
+    <#if field.optionType.type==1 || field.optionType.type==2>
+      ${field.propsName}FilterColor (type) {
+        return ${field.propsName}StatusMap[type].color
+      },
+      ${field.propsName}FilterText (type) {
+        return ${field.propsName}StatusMap[type].text
+      }<#if field_index != (((tbl.selectfields)?size)-1)>,</#if>
+    </#if>
+  </#if>
+</#list>
+    },
+    created () {
+      this.tableOption()
+    },
+    methods: {
+      tableOption () {
+        if (!this.optionAlertShow) {
+          this.options = {
+            alert: {
+              show: true,
+              clear: () => {
+                this.selectedRowKeys = []
+              }
+            },
+            rowSelection: {
+              selectedRowKeys: this.selectedRowKeys,
+              onChange: this.onSelectChange
+              // type: 'radio'
+            }
+          }
+          this.optionAlertShow = true
+        } else {
+          this.options = {
+            alert: false,
+            rowSelection: null
+          }
+          this.optionAlertShow = false
+        }
+      },
+      handleEdit (record) {
+        this.$refs.${tbl.propsName}Model.edit(record)
+      },
+      handleDetail (record) {
+        this.$refs.${tbl.propsName}Model.detail(record)
+      },
+      confirm (record) {
+        delete${tbl.entityName}(record.id).then(res => {
+          if (res.stateCode === 1) {
+            this.$message.success('删除成功')
+          } else {
+            this.$message.error('删除失败')
+          }
+        }).catch(_ => {
+          this.$message.error('删除失败')
+        }).finally(_ => {
+          this.$refs.table.refresh()
+        })
+      },
+      cancel (record) {
+        console.log(record)
+        this.$message.error('取消删除')
+      },
+      handleOk () {
+        this.$refs.table.refresh()
+      },
+      onSelectChange (selectedRowKeys, selectedRows) {
+        this.selectedRowKeys = selectedRowKeys
+        // this.selectedRows = selectedRows
+      },
+<#if tbl.advanced == true>
+      toggleAdvanced () {
+        this.advanced = !this.advanced
+      },
+</#if>
+      reset () {
+        this.queryParam = {}
+        this.$refs.table.refresh(true)
+      }
+    }
+  }
+</script>

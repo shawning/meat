@@ -1,0 +1,192 @@
+<template>
+  <a-modal
+    :title="<#noparse>`${flag === 'add'?'添加':flag === 'edit'?'修改':'查看'}</#noparse>${tbl.comment}`"
+    :width="960"
+    :visible="visible"
+    @cancel="handleCancel"
+    :confirmLoading="confirmLoading"
+  >
+    <a-spin :spinning="confirmLoading">
+      <a-form-model
+        ref="ruleForm"
+        :model="mdl"
+        :rules="rules"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol">
+        <a-row>
+<#list tbl.fields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='createDate' && field.propsName!='createByName' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>
+    <#if field.dbColumnType.uiElement=='input'>
+     <#if field.optionType.type==2>
+          <a-col :span="12">
+            <a-form-model-item has-feedback ref="${field.propsName}" label="${field.comment}" prop="${field.propsName}">
+              <a-select :disabled="flag==='detail'" v-model="mdl.${field.propsName}" placeholder="请选择${field.comment}" allowClear>
+                <#list field.options as option>
+                <a-select-option value="${option.optionKey}">${option.optionName}</a-select-option>
+                </#list>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+     <#else>
+          <a-col :span="12">
+            <a-form-model-item has-feedback label="${field.comment}" prop="${field.propsName}">
+              <a-input :disabled="flag==='detail'" v-model="mdl.${field.propsName}" placeholder="请选择${field.comment}" allow-clear/>
+            </a-form-model-item>
+          </a-col>
+     </#if>
+    <#elseif field.dbColumnType.uiElement=='date-picker'>
+          <a-col :span="12">
+            <a-form-model-item has-feedback label="${field.comment}" prop="${field.propsName}">
+              <a-date-picker
+                style="width:100%"
+                type="datetime"
+                valueFormat="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm:ss"
+                :disabled="flag==='detail'"
+                v-model="mdl.${field.propsName}"
+                show-time/>
+            </a-form-model-item>
+          </a-col>
+    <#elseif field.dbColumnType.uiElement=='input-number'>
+     <#if field.optionType.type==1>
+          <a-col :span="12">
+            <a-form-model-item has-feedback ref="${field.propsName}" label="${field.comment}" prop="${field.propsName}">
+              <a-select :disabled="flag==='detail'" v-model="mdl.${field.propsName}" placeholder="请选择${field.comment}" allowClear>
+                <#list field.options as option>
+                <a-select-option :value="${option.optionKey}">${option.optionName}</a-select-option>
+                </#list>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+     <#else>
+          <a-col :span="12">
+            <a-form-model-item has-feedback ref="${field.propsName}" label="${field.comment}" prop="${field.propsName}">
+              <a-input-number style="width: 266px" :disabled="flag==='detail'" v-model="mdl.${field.propsName}" placeholder="请选择${field.comment}" allow-clear/>
+            </a-form-model-item>
+          </a-col>
+     </#if>
+    <#else>
+          <a-col :span="12">
+            <a-form-model-item has-feedback ref="${field.propsName}" label="${field.comment}" prop="${field.propsName}">
+              <a-input-number style="width: 266px" :disabled="flag==='detail'" v-model="mdl.${field.propsName}" placeholder="请选择${field.comment}" allow-clear/>
+            </a-form-model-item>
+          </a-col>
+    </#if>
+  </#if>
+</#list>
+        </a-row>
+      </a-form-model>
+    </a-spin>
+    <template slot="footer">
+      <a-button v-if="flag!=='detail'" key="back" @click="handleCancel">取消</a-button>
+      <a-button v-if="flag!=='detail'" key="submit" type="primary" :loading="confirmLoading" @click="handleSubmit">确认</a-button>
+      <a-button v-if="flag==='detail'" key="back" @click="handleCancel">关闭</a-button>
+    </template>
+  </a-modal>
+</template>
+
+<script>
+
+  import { save, update } from '@/api/${tbl.propsName}Api'
+  import picker from 'lodash.pick'
+
+  export default {
+    data () {
+      return {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 }
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 14 }
+        },
+        mdl: {},
+        rules: {
+        <#assign c_index=1 />
+<#list tbl.fields as field>
+  <#if field.propsName!='id' && field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='createDate' && field.propsName!='createByName' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>
+          ${field.propsName}: [
+            { required: <#if field.required==true>true<#else>false</#if>, message: '${field.comment}必填！', trigger: 'blur' }<#if field.integerLength!=0>,
+            { max: ${field.integerLength}, message: '长度不能超过${field.integerLength}', trigger: 'blur' }</#if>
+          ]<#if c_index!=(((tbl.fields)?size)-8)>,<#assign c_index=(c_index+1) /></#if>
+  </#if>
+</#list>
+        },
+        visible: false,
+        confirmLoading: false,
+        flag: 'add'
+      }
+    },
+    methods: {
+      add () {
+        this.visible = true
+        this.flag = 'add'
+        this.mdl = {}
+      },
+      edit (data) {
+        this.visible = true
+        this.flag = 'edit'
+        this.$nextTick(() => {
+        <#assign a_index=1 />
+          this.mdl = picker(data, [<#list tbl.fields as field><#if field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='createDate' && field.propsName!='createByName' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>'${field.propsName}'<#if a_index!=(((tbl.fields)?size)-7)>, <#assign a_index=(a_index+1) /></#if></#if></#list>])
+        })
+      },
+      detail (data) {
+        this.visible = true
+        this.flag = 'detail'
+        this.$nextTick(() => {
+        <#assign b_index=1 />
+          this.mdl = picker(data, [<#list tbl.fields as field><#if field.propsName!='isAvailable' && field.propsName!='createBy' && field.propsName!='createDate' && field.propsName!='createByName' && field.propsName!='updateBy' && field.propsName!='updateDate' && field.propsName!='updateByName'>'${field.propsName}'<#if b_index!=(((tbl.fields)?size)-7)>, <#assign b_index=(b_index+1) /></#if></#if></#list>])
+        })
+      },
+      handleSubmit () {
+        this.$refs.ruleForm.validate(valid => {
+          if (valid) {
+            this.confirmLoading = true
+            if (this.flag === 'add') {
+              save(this.mdl).then(res => {
+                this.confirmLoading = false
+                if (res.stateCode === 1) {
+                  this.visible = false
+                  this.$message.success('新增成功')
+                  this.$emit('ok')
+                  this.$refs.ruleForm.resetFields()
+                } else {
+                  this.$message.error(res.msg)
+                }
+              }).catch(err => {
+                console.error(err)
+                this.confirmLoading = false
+              })
+            } else if (this.flag === 'edit') {
+              update(this.mdl).then(res => {
+                this.confirmLoading = false
+                if (res.stateCode === 1) {
+                  this.visible = false
+                  this.$message.success('更新成功')
+                  this.$emit('ok')
+                  this.$refs.ruleForm.resetFields()
+                } else {
+                  this.$message.error(res.msg)
+                }
+              }).catch(err => {
+                console.error(err)
+                this.confirmLoading = false
+              })
+            } else {
+              this.confirmLoading = false
+            }
+          } else {
+            this.confirmLoading = false
+            return false
+          }
+        })
+      },
+      handleCancel () {
+        this.visible = false
+        this.$refs.ruleForm.resetFields()
+      }
+    }
+  }
+</script>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${basePackage}.mapper.${tbl.entityName}Mapper">
+  <resultMap id="BaseResultMap" type="${basePackage}.model.${tbl.entityName}">
+    <id column="ID" jdbcType="BIGINT" property="id"/>
+    <#list tbl.fields as field>
+    <#if field.propsName!='id' && field.propsName!='isAvailable'>
+    <result column="${field.name}" jdbcType="${field.dbColumnType.mybatisType}" property="${field.propsName}"/>
+    </#if>
+    </#list>
+    <result column="IS_AVAILABLE" jdbcType="INTEGER" property="isAvailable"/>
+  </resultMap>
+  <!-- 以下是自查询定义方法 -->
+
+</mapper>

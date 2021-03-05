@@ -1,0 +1,123 @@
+package ${basePackage}.controller;
+
+import com.alibaba.fastjson.JSON;
+import ${mainGroup}.core.constant.Constants;
+import ${mainGroup}.core.response.R;
+import ${mainGroup}.core.support.Grid;
+import ${basePackage}.model.${tbl.entityName};
+import ${basePackage}.service.${tbl.entityName}Service;
+import ${basePackage}.vo.${tbl.entityName}Vo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import static ${mainGroup}.core.response.ResponseType.BIZ_EXCEPTION;
+
+/**
+ * ${tbl.comment}管理
+ * @author ${author}
+ */
+
+@Slf4j
+@RestController
+@RequestMapping("${tbl.propsName}")
+@Api(value = "/${tbl.propsName}", tags = {"${tbl.entityName} API"}, description = "${tbl.comment} API")
+public class ${tbl.entityName}Controller {
+    @Autowired
+    private ${tbl.entityName}Service ${tbl.propsName}Service;
+
+    /**
+     * 查询${tbl.comment}列表
+     *
+     * @param ${tbl.propsName}Vo 入参查询
+     * @return R
+     */
+    @PostMapping("list")
+    @ApiOperation(notes = "查询${tbl.comment}列表",
+            httpMethod = Constants.POST,
+            response = Grid.class,
+            value = "查询${tbl.comment}列表",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Grid ${tbl.propsName}List(@RequestBody ${tbl.entityName}Vo ${tbl.propsName}Vo){
+        log.info("${tbl.propsName}Vo ===> {}",JSON.toJSONString(${tbl.propsName}Vo));
+        return Grid.of(${tbl.propsName}Service.select${tbl.entityName}List(${tbl.propsName}Vo));
+    }
+
+    /**
+     * 保存${tbl.comment}
+     *
+     * @param ${tbl.propsName} 入参
+     * @return R
+     */
+    @PutMapping("save")
+    @ApiOperation(notes = "保存${tbl.comment}",
+            httpMethod = Constants.PUT,
+            response = R.class,
+            value = "保存${tbl.comment}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public R save${tbl.entityName}(@Validated(${tbl.entityName}.Save${tbl.entityName}.class) @RequestBody
+                                        ${tbl.entityName} ${tbl.propsName}) {
+        return R.of(${tbl.propsName}Service.save${tbl.entityName}(${tbl.propsName}));
+    }
+
+    /**
+     * 更新${tbl.comment}
+     *
+     * @param ${tbl.propsName} 入参
+     * @return R
+     */
+    @PatchMapping("update")
+    @ApiOperation(notes = "更新${tbl.comment}",
+            httpMethod = Constants.PATCH,
+            response = R.class,
+            value = "更新${tbl.comment}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public R update${tbl.entityName}(@RequestBody @Validated(${tbl.entityName}.Update${tbl.entityName}.class)
+                                        ${tbl.entityName} ${tbl.propsName}) {
+           if(!${tbl.propsName}Service.update${tbl.entityName}(${tbl.propsName})) {
+              return R.of(BIZ_EXCEPTION.getStateCode());
+           }
+           return R.of();
+    }
+
+    /**
+     * 逻辑删除${tbl.comment}
+     *
+     * @param id 入参ID
+     * @return R
+     */
+    @DeleteMapping("delete/{id}")
+    @ApiOperation(notes = "逻辑删除${tbl.comment}",
+            httpMethod = Constants.DELETE,
+            response = R.class,
+            value = "逻辑删除${tbl.comment}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public R delete${tbl.entityName}(@PathVariable("id") Long id) {
+        return R.of(${tbl.propsName}Service.delete${tbl.entityName}(id));
+    }
+
+    /**
+     * 根据ID获取${tbl.comment}
+     *
+     * @param id 入参ID
+     * @return R
+     */
+    @GetMapping("get/{id}")
+    @ApiOperation(notes = "根据ID获取${tbl.comment}",
+            httpMethod = Constants.GET,
+            response = R.class,
+            value = "根据ID获取${tbl.comment}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public R get${tbl.entityName}(@PathVariable("id") Long id){
+        return R.of(${tbl.propsName}Service.get${tbl.entityName}(id));
+    }
+}

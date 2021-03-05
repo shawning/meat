@@ -1,0 +1,180 @@
+package ${basePackage}.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ${mainGroup}.core.support.Sort;
+import ${basePackage}.mapper.${tbl.entityName}Mapper;
+import ${basePackage}.model.${tbl.entityName};
+import ${basePackage}.service.${tbl.entityName}Service;
+import ${mainGroup}.core.redis.service.RedisService;
+import ${basePackage}.vo.${tbl.entityName}Vo;
+import lombok.NonNull;
+import org.apache.commons.lang.StringUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.jianjin.log.service.LogService;
+
+import java.util.Date;
+
+/**
+ * ${tbl.comment}管理
+ * @author ${author}
+ */
+
+@Slf4j
+@Service
+public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}Mapper, ${tbl.entityName}> implements ${tbl.entityName}Service {
+
+    @Autowired
+    private LogService logService;
+    @Autowired
+    private RedisService redisService;
+
+    @Override
+    public IPage<${tbl.entityName}> select${tbl.entityName}List(${tbl.entityName}Vo ${tbl.propsName}Vo) {
+        if (${tbl.propsName}Vo == null) {
+            return this.page(new Page<>(), Wrappers.emptyWrapper());
+        }
+        LambdaQueryWrapper<${tbl.entityName}> queryWrapper = new LambdaQueryWrapper<>();
+        <#list tbl.fields as field>
+        <#if field.propsName!='id'
+        &&field.propsName!='isAvailable'
+        &&field.propsName!='createName'
+        &&field.propsName!='createByName'
+        &&field.propsName!='updateByName'
+        &&field.propsName!='updateName'
+        &&field.propsName!='createTime'
+        &&field.propsName!='createDate'
+        &&field.propsName!='updateTime'
+        &&field.propsName!='updateDate'
+        &&field.propsName!='createBy'
+        &&field.propsName!='updateBy'>
+        <#if field.dbColumnType.type=='String'>
+        if(StringUtils.isNotBlank(${tbl.propsName}Vo.get${field.entityName}())){
+            queryWrapper.like(${tbl.entityName}::get${field.entityName}, ${tbl.propsName}Vo.get${field.entityName}());
+        }
+        <#else>
+        if(${tbl.propsName}Vo.get${field.entityName}() != null){
+            queryWrapper.eq(${tbl.entityName}::get${field.entityName}, ${tbl.propsName}Vo.get${field.entityName}());
+        }
+        </#if>
+        </#if>
+        </#list>
+
+        Page<${tbl.entityName}> page = new Page<>();
+        Sort.bind(${tbl.propsName}Vo, page, true);
+        return this.page(page, queryWrapper);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean save${tbl.entityName}(@NonNull ${tbl.entityName} ${tbl.propsName}) {
+        <#list tbl.fields as field>
+        <#if field.propsName=='createBy'>
+        ${tbl.propsName}.setCreateBy(redisService.getUserId());
+        </#if>
+        <#if field.propsName=='createByName'>
+        ${tbl.propsName}.setCreateByName(redisService.getUserName());
+        </#if>
+        <#if field.propsName=='createDate'>
+        ${tbl.propsName}.setCreateDate(new Date());
+        </#if>
+        </#list>
+        ${tbl.propsName}.setIsAvailable(1);
+
+        /*
+          添加日志
+        */
+        logService.of(()->Payload.builder()
+        .bizType(BizType.BACK_BIZ)
+        .systemName("渐进后台管理")
+        .optionModule("系统模块")
+        .optionFunction("新增")
+        .optionUserId(redisService.getCurrentUser().getUserId())
+        .optionUserName(redisService.getCurrentUser().getUserName())
+        .optionType(OptionType.INSERT)
+        .payload(${tbl.propsName}, OptionType.INSERT)
+        .build());
+        return this.save(${tbl.propsName});
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean update${tbl.entityName}(${tbl.entityName} ${tbl.propsName}New) {
+        Long id = ${tbl.propsName}New.getId();
+        if (id == null) {
+            return Boolean.FALSE;
+        }
+        ${tbl.entityName} ${tbl.propsName} = this.getById(id);
+
+        <#list tbl.fields as field>
+        <#if field.propsName!='id'
+        &&field.propsName!='isAvailable'
+        &&field.propsName!='createName'
+        &&field.propsName!='createByName'
+        &&field.propsName!='updateByName'
+        &&field.propsName!='updateName'
+        &&field.propsName!='createTime'
+        &&field.propsName!='createDate'
+        &&field.propsName!='updateTime'
+        &&field.propsName!='updateDate'
+        &&field.propsName!='createBy'
+        &&field.propsName!='updateBy'>
+        ${tbl.propsName}.set${field.entityName}(${tbl.propsName}New.get${field.entityName}());
+        </#if>
+        <#if field.propsName=='updateBy'>
+        ${tbl.propsName}.setUpdateBy(redisService.getUserId());
+        </#if>
+        <#if field.propsName=='updateByName'>
+        ${tbl.propsName}.setUpdateByName(redisService.getUserName());
+        </#if>
+        <#if field.propsName=='updateDate'>
+        ${tbl.propsName}.setUpdateDate(new Date());
+        </#if>
+        </#list>
+        /*
+         添加日志
+        */
+        logService.of(()->Payload.builder()
+        .bizType(BizType.BACK_BIZ)
+        .systemName("渐进后台管理")
+        .optionModule("系统模块")
+        .optionFunction("修改")
+        .optionUserId(redisService.getCurrentUser().getUserId())
+        .optionUserName(redisService.getCurrentUser().getUserName())
+        .optionType(OptionType.UPDATE)
+        .payload(${tbl.propsName}, ${tbl.propsName}New)
+        .build());
+        return this.updateById(${tbl.propsName});
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Boolean delete${tbl.entityName}(@NonNull Long id) {
+        /*
+        添加日志
+        */
+        logService.of(()->Payload.builder()
+        .bizType(BizType.BACK_BIZ)
+        .systemName("渐进后台管理")
+        .optionModule("系统模块")
+        .optionFunction("删除")
+        .optionUserId(redisService.getCurrentUser().getUserId())
+        .optionUserName(redisService.getCurrentUser().getUserName())
+        .optionType(OptionType.DELETE)
+        .payload(this.getById(id), OptionType.DELETE)
+        .build());
+        return this.removeById(id);
+    }
+
+    @Override
+    public ${tbl.entityName} get${tbl.entityName}(@NonNull Long id){
+        return this.getById(id);
+    }
+}

@@ -1,0 +1,46 @@
+package ${basePackage}.service;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${basePackage}.model.${tbl.entityName};
+import ${basePackage}.vo.${tbl.entityName}Vo;
+
+/**
+ * ${tbl.comment}管理
+ * @author ${author}
+ */
+
+public interface ${tbl.entityName}Service extends IService<${tbl.entityName}> {
+
+        /**
+         * @param ${tbl.propsName}Vo
+         * @return
+         */
+        IPage<${tbl.entityName}> select${tbl.entityName}List(${tbl.entityName}Vo ${tbl.propsName}Vo);
+
+        /**
+         * @param ${tbl.propsName}
+         * @return
+         */
+        Boolean save${tbl.entityName}(${tbl.entityName} ${tbl.propsName});
+
+        /**
+         * @param ${tbl.propsName}
+         * @return
+         */
+        Boolean update${tbl.entityName}(${tbl.entityName} ${tbl.propsName});
+
+        /**
+         * @param id
+         * @return
+         */
+        Boolean delete${tbl.entityName}(Long id);
+
+        /**
+         * 根据ID查询
+         *
+         * @param id
+         * @return
+         */
+        ${tbl.entityName} get${tbl.entityName}(Long id);
+}

@@ -1,0 +1,88 @@
+package ${basePackage}.model;
+
+import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.jianjin.log.annotation.LogTableField;
+import com.jianjin.log.annotation.LogTable;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import javax.validation.constraints.*;
+
+/**
+ * ${tbl.comment}
+ * @author ${author}
+ */
+
+@Data
+@NoArgsConstructor
+@TableName("${tbl.name}")
+@ApiModel(description = "${tbl.comment}属性")
+@LogTable(modelName = "${tbl.comment}",
+        propertyName = "${tbl.propsName}",
+        tableSqlName = "${tbl.name}")
+public class ${tbl.entityName} implements Serializable {
+
+    /**
+     * 更新${tbl.comment}组
+     */
+    public interface Save${tbl.entityName} {
+
+    }
+
+    /**
+     * 更新${tbl.comment}组
+     */
+    public interface Update${tbl.entityName} {
+
+    }
+    @LogTableField(fieldName = "主键ID", fieldPropertyName = "id", fieldSqlName = "ID")
+    @ApiModelProperty(value = "${tbl.comment}ID", example = "1")
+    @NotNull(groups = {Update${tbl.entityName}.class}, message = "ID不能为空")
+    @TableId(value = "ID", type = IdType.AUTO)
+    private Long id;
+    <#list tbl.fields as field>
+    <#if field.propsName!='id' && field.propsName!='isAvailable'>
+    <#if field.dbColumnType.type=='String'>
+    @LogTableField(fieldName = "${field.comment}", fieldPropertyName = "${field.propsName}", fieldSqlName = "${field.name}")
+    @ApiModelProperty(value = "${field.comment}")
+    <#if field.required==true>
+    @NotBlank(groups = {Save${tbl.entityName}.class, Update${tbl.entityName}.class}, message = "${field.comment}-${field.propsName}不能为空")
+    <#if field.integerLength!=0>
+    @Size(groups =  {Save${tbl.entityName}.class, Update${tbl.entityName}.class},max=${field.integerLength},message = "${field.comment}-${field.propsName}长度不能超过${field.integerLength}")
+    </#if>
+    </#if>
+    @TableField("${field.name}")
+    private ${field.dbColumnType.type} ${field.propsName};
+    <#elseif field.dbColumnType.type=='Date'>
+    @LogTableField(fieldName = "${field.comment}", fieldPropertyName = "${field.propsName}", fieldSqlName = "${field.name}")
+    @ApiModelProperty(value = "${field.comment}", example = "2019-05-05 00:00:00")
+    @TableField("${field.name}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private ${field.dbColumnType.type} ${field.propsName};
+    <#else>
+    @LogTableField(fieldName = "${field.comment}", fieldPropertyName = "${field.propsName}", fieldSqlName = "${field.name}")
+    @ApiModelProperty(value = "${field.comment}", example = "0")
+    <#if field.required==true>
+    @NotNull(groups = {Save${tbl.entityName}.class, Update${tbl.entityName}.class}, message = "${field.comment}-${field.propsName}不能为空")
+    <#if field.dbColumnType.digitsStatus== true>
+    @Digits(groups = {Save${tbl.entityName}.class, Update${tbl.entityName}.class}, integer = ${field.integerLength}, fraction = ${field.fraction}, message = "${field.comment}-${field.propsName}参数异常")
+    </#if>
+    </#if>
+    @TableField("${field.name}")
+    private ${field.dbColumnType.type} ${field.propsName};
+    </#if>
+    </#if>
+    </#list>
+    @LogTableField(fieldName = "数据有效性", fieldPropertyName = "isAvailable", fieldSqlName = "IS_AVAILABLE")
+    @ApiModelProperty(value = "数据有效性", example = "1")
+    @TableLogic
+    @TableField("IS_AVAILABLE")
+    private Integer isAvailable = 1;
+
+}
