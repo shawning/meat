@@ -6,7 +6,6 @@
         <artifactId>meet-app</artifactId>
         <groupId>com.youlai</groupId>
         <version>1.0.0</version>
-        <relativePath/>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
