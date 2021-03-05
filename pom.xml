@@ -14,13 +14,14 @@
         <module>youlai-admin</module>
         <module>youlai-auth</module>
         <module>youlai-gateway</module>
-        <module>youlai-registry</module>
+       <!-- <module>youlai-registry</module>
         <module>mall-sms</module>
         <module>mall-ums</module>
         <module>mall-pms</module>
-        <module>mall-oms</module>
+        <module>mall-oms</module>-->
+        <module>meet-app</module>
+        <module>codegen-maven-plugin</module>
     </modules>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

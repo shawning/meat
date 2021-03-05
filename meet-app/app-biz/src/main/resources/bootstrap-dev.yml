@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: meet-app
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://47.117.127.149:8848
+        namespace: 3fdbe3b0-6a50-4fb2-b0d0-c27bc2592366
+      config:
+        # docker启动nacos-server需要配置
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        namespace: 3fdbe3b0-6a50-4fb2-b0d0-c27bc2592366
+        extension-configs:
+          - dataId: meet-app.yaml
+            group: DEFAULT_GROUP
+            refresh: true

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meet.app.mapper.BizVersionMapper">
+  <resultMap id="BaseResultMap" type="com.meet.app.entity.BizVersion">
+    <id column="ID" jdbcType="BIGINT" property="id"/>
+    <result column="APP_NAME" jdbcType="VARCHAR" property="appName"/>
+    <result column="APP_TYPE" jdbcType="INTEGER" property="appType"/>
+    <result column="APP_PLATFORM" jdbcType="INTEGER" property="appPlatform"/>
+    <result column="APP_VERSION" jdbcType="VARCHAR" property="appVersion"/>
+    <result column="APP_VERSION_ORDER" jdbcType="INTEGER" property="appVersionOrder"/>
+    <result column="APP_VERSION_STATUS" jdbcType="INTEGER" property="appVersionStatus"/>
+    <result column="IS_ENABLE" jdbcType="INTEGER" property="isEnable"/>
+    <result column="APP_UPDATE_DESC" jdbcType="VARCHAR" property="appUpdateDesc"/>
+    <result column="APP_DOWNLOAD_URL" jdbcType="VARCHAR" property="appDownloadUrl"/>
+    <result column="CREATE_BY" jdbcType="BIGINT" property="createBy"/>
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+    <result column="CREATE_BY_NAME" jdbcType="VARCHAR" property="createByName"/>
+    <result column="UPDATE_BY" jdbcType="BIGINT" property="updateBy"/>
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    <result column="UPDATE_BY_NAME" jdbcType="VARCHAR" property="updateByName"/>
+    <result column="IS_AVAILABLE" jdbcType="INTEGER" property="isAvailable"/>
+  </resultMap>
+  <!-- 以下是自查询定义方法 -->
+  <select id="findVersion" resultMap="BaseResultMap">
+    SELECT * FROM biz_version WHERE IS_AVAILABLE = 1 AND IS_ENABLE = 1
+          AND APP_TYPE = #{appType}
+          AND APP_PLATFORM = #{appPlatform}
+          AND APP_VERSION = #{appVersion}
+  </select>
+  <select id="findLastAvailableVersion" resultMap="BaseResultMap">
+    SELECT * FROM biz_version WHERE IS_AVAILABLE = 1 AND IS_ENABLE = 1
+          AND APP_TYPE = #{appType}
+          AND APP_PLATFORM = #{appPlatform}
+          AND APP_VERSION_STATUS IN (1,4)
+          ORDER BY APP_VERSION LIMIT 0,1
+  </select>
+</mapper>
