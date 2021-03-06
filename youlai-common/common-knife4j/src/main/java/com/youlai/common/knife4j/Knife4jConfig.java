@@ -33,8 +33,8 @@ public class Knife4jConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("有来科技API")
-                .contact(new Contact("youlai", "https://www.youlai.store", "youlaistore@163.com"))
+                .title("觅他-APP-API")
+                .contact(new Contact("肖宁", "https://xxx.xx.com", "286531759@qq.com"))
                 .version("1.0.0")
                 .build();
     }

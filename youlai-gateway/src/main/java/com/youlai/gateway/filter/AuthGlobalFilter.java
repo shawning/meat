@@ -67,7 +67,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         if (isBlack) {
             return WebUtils.writeFailedToResponse(response, ResultCode.TOKEN_INVALID_OR_EXPIRED);
         }
-
         // 存在token且不是黑名单，request写入JWT的载体信息
         request = exchange.getRequest().mutate()
                 .header(AuthConstants.JWT_PAYLOAD_KEY, payload)

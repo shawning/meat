@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserFeignService {
 
     @GetMapping("/api.admin/v1/users/username/{username}")
-    Result<UserDTO> getUserByUsername(@PathVariable String username);
+    Result<UserDTO> getUserByUsername(@PathVariable(value = "username") String username);
 }

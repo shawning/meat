@@ -1,13 +1,14 @@
 package com.youlai.auth.service;
 
+import com.meet.app.dto.AppUserDto;
 import com.youlai.admin.pojo.dto.UserDTO;
 import com.youlai.admin.api.UserFeignService;
 import com.youlai.auth.domain.User;
 import com.youlai.common.constant.AuthConstants;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
-import com.youlai.mall.ums.pojo.dto.AuthMemberDTO;
-import com.youlai.mall.ums.api.MemberFeignService;
+//import com.youlai.mall.ums.pojo.dto.AuthMemberDTO;
+//import com.youlai.mall.ums.api.MemberFeignService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,8 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserFeignService userFeignService;
-    private MemberFeignService memberFeignService;
-
+//    private MemberFeignService memberFeignService;
+    private com.meet.app.api.UserFeignService appUserFeignService;
+    private PasswordEncoder passwordEncoder;
     private HttpServletRequest request;
 
     @Override
@@ -46,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userDTO.setClientId(clientId);
                 user = new User(userDTO);
                 break;
-            case AuthConstants.WEAPP_CLIENT_ID: // 小程序会员
+            /*case AuthConstants.WEAPP_CLIENT_ID: // 小程序会员
                 Result<AuthMemberDTO> memberRes = memberFeignService.getUserByOpenid(username);
                 if (ResultCode.USER_NOT_EXIST.getCode().equals(memberRes.getCode())) {
                     throw new UsernameNotFoundException(ResultCode.USER_NOT_EXIST.getMsg());
@@ -54,6 +57,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 AuthMemberDTO authMemberDTO = memberRes.getData();
                 authMemberDTO.setClientId(clientId);
                 user = new User(authMemberDTO);
+                break;*/
+            case AuthConstants.APP_CLIENT_ID://app
+                Result<AppUserDto> appUserRes = appUserFeignService.getUserByPhone(username);
+                if(ResultCode.USER_NOT_EXIST.getCode().equals(appUserRes.getCode())){
+                    throw new UsernameNotFoundException(ResultCode.USER_NOT_EXIST.getMsg());
+                }
+                AppUserDto appUserDTO = appUserRes.getData();
+//                String password = passwordEncoder.encode(appUserDTO.getPhone()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+//                appUserDTO.setPassword(password);
+                appUserDTO.setClientId(clientId);
+                user = new User(appUserDTO);
                 break;
         }
         if (!user.isEnabled()) {

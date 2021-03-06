@@ -2,13 +2,21 @@ server:
   port: 9999
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
-    name:  youlai-gateway
+    name: youlai-gateway
   cloud:
     nacos:
       discovery:
-        server-addr: http://localhost:8848
+        server-addr: http://47.117.127.149:8848
+        namespace: 3fdbe3b0-6a50-4fb2-b0d0-c27bc2592366
       config:
-        # docker启动nacos-server需要配置
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         file-extension: yaml
+        namespace: 3fdbe3b0-6a50-4fb2-b0d0-c27bc2592366
+        extension-configs:
+          - dataId: youlai-gateway.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+        group: DEFAULT_GROUP

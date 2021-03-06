@@ -75,4 +75,9 @@ public interface AuthConstants {
      * 后台管理接口路径匹配
      */
     String ADMIN_URL_PATTERN ="*_/youlai-admin/**" ;
+
+    /**
+     * app客户端
+     */
+    String APP_CLIENT_ID="app";
 }

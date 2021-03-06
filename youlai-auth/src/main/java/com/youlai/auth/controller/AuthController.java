@@ -4,15 +4,17 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.hutool.core.util.StrUtil;
+import com.meet.app.api.UserFeignService;
+import com.meet.app.dto.AppUserDto;
 import com.youlai.auth.domain.Oauth2Token;
 import com.youlai.common.constant.AuthConstants;
 import com.youlai.common.constant.GlobalConstants;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
 import com.youlai.common.web.exception.BizException;
-import com.youlai.mall.ums.api.MemberFeignService;
-import com.youlai.mall.ums.pojo.UmsUser;
-import com.youlai.mall.ums.pojo.dto.AuthMemberDTO;
+//import com.youlai.mall.ums.api.MemberFeignService;
+//import com.youlai.mall.ums.pojo.UmsUser;
+//import com.youlai.mall.ums.pojo.dto.AuthMemberDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -64,8 +66,10 @@ public class AuthController {
     ) throws HttpRequestMethodNotSupportedException {
         String clientId = parameters.get(AuthConstants.JWT_CLIENT_ID_KEY);
         switch (clientId) {
-            case AuthConstants.WEAPP_CLIENT_ID:  // 微信认证
-                return this.handleForWxAuth(principal, parameters);
+//            case AuthConstants.WEAPP_CLIENT_ID:  // 微信认证
+//                return this.handleForWxAuth(principal, parameters);
+            case AuthConstants.APP_CLIENT_ID:  // APP认证
+                return this.handleForAPPAuth(principal, parameters);
             default:
                 OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
                 Oauth2Token oauth2Token = Oauth2Token.builder()
@@ -79,10 +83,10 @@ public class AuthController {
 
 
     private WxMaService wxService;
-    private MemberFeignService memberFeignService;
+//    private MemberFeignService memberFeignService;
     private PasswordEncoder passwordEncoder;
 
-    public Result handleForWxAuth(Principal principal, Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+    /*public Result handleForWxAuth(Principal principal, Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
 
         String code = parameters.get("code");
 
@@ -135,7 +139,45 @@ public class AuthController {
                 .expiresIn(oAuth2AccessToken.getExpiresIn())
                 .build();
         return Result.success(oauth2Token);
-    }
+    }*/
 
+    private UserFeignService userFeignService;
+    /**
+     * app认证
+     * @param principal
+     * @param parameters
+     * @return
+     * @throws HttpRequestMethodNotSupportedException
+     */
+    public Result handleForAPPAuth(Principal principal, Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+
+        String code = parameters.get("code");
+        String username = parameters.get("username");
+        if (StrUtil.isBlank(code)) {
+            throw new BizException("code不能为空");
+        }
+        Result<AppUserDto> result = userFeignService.getUserByPhone(parameters.get("username"));
+        if (ResultCode.USER_NOT_EXIST.getCode().equals(result.getCode())) { // 授权登录 会员信息不存在时 注册会员
+            AppUserDto user = new AppUserDto();
+            user.setName(username);
+            user.setPhone(username);
+            user.setPassword((passwordEncoder.encode(username).replace(AuthConstants.BCRYPT, Strings.EMPTY)));
+            Result res = userFeignService.add(user);
+            if (!ResultCode.SUCCESS.getCode().equals(res.getCode())) {
+                throw new BizException("注册失败");
+            }
+        }
+        String password = (passwordEncoder.encode(username).replace(AuthConstants.BCRYPT, Strings.EMPTY));
+
+        parameters.put("password", username);
+        // oauth2认证参数对应授权登录时注册会员的username、password信息，模拟通过oauth2的密码模式认证
+        OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+        Oauth2Token oauth2Token = Oauth2Token.builder()
+                .token(oAuth2AccessToken.getValue())
+                .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
+                .expiresIn(oAuth2AccessToken.getExpiresIn())
+                .build();
+        return Result.success(oauth2Token);
+    }
 
 }

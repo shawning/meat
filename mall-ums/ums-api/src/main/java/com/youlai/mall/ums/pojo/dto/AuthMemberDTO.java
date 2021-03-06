@@ -10,7 +10,6 @@ public class AuthMemberDTO {
     private String password;
     private Integer status;
     private String clientId;
-
     private String avatar;
     private String nickname;
 

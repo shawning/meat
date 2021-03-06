@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public enum ResultCode implements IResultCode, Serializable {
 
-    SUCCESS("00000", "一切ok"),
+    SUCCESS("00000", "操作成功"),
 
     USER_ERROR("A0001", "用户端错误"),
     USER_LOGIN_ERROR("A0200", "用户登录异常"),
@@ -25,6 +25,7 @@ public enum ResultCode implements IResultCode, Serializable {
     USERNAME_OR_PASSWORD_ERROR("A0210", "用户名或密码错误"),
     INPUT_PASSWORD_EXCEED_LIMIT("A0211", "用户输入密码次数超限"),
     CLIENT_AUTHENTICATION_FAILED("A0212", "客户端认证失败"), // *
+    CLIENT_AUTHENTICATION_NOT_EXIST("A0213", "无效版本号"), // *
     TOKEN_INVALID_OR_EXPIRED("A0230", "token无效或已过期"),
 
     AUTHORIZED_ERROR("A0300", "访问权限异常"),

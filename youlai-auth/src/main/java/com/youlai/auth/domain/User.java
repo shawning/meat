@@ -1,9 +1,10 @@
 package com.youlai.auth.domain;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.meet.app.dto.AppUserDto;
 import com.youlai.admin.pojo.dto.UserDTO;
 import com.youlai.common.constant.AuthConstants;
-import com.youlai.mall.ums.pojo.dto.AuthMemberDTO;
+//import com.youlai.mall.ums.pojo.dto.AuthMemberDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,12 +46,19 @@ public class User implements UserDetails {
         }
     }
 
-    public User(AuthMemberDTO member){
-        this.setId(member.getId());
-        this.setUsername(member.getUsername());
-        this.setPassword(AuthConstants.BCRYPT + member.getPassword());
-        this.setEnabled( Integer.valueOf(1).equals(member.getStatus()));
-        this.setClientId(member.getClientId());
+//    public User(AuthMemberDTO member){
+//        this.setId(member.getId());
+//        this.setUsername(member.getUsername());
+//        this.setPassword(AuthConstants.BCRYPT + member.getPassword());
+//        this.setEnabled( Integer.valueOf(1).equals(member.getStatus()));
+//        this.setClientId(member.getClientId());
+//    }
+    public User(AppUserDto user){
+        this.setId(user.getId());
+        this.setUsername(user.getName());
+        this.setPassword(AuthConstants.BCRYPT + user.getPassword());
+        this.setEnabled( Integer.valueOf(1).equals(user.getStatus()));
+        this.setClientId(user.getClientId());
     }
 
 
