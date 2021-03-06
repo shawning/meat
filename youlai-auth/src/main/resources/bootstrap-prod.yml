@@ -7,11 +7,15 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: http://c.youlai.store:8848
-        namespace: prod_namespace_id
+        server-addr: http://47.117.127.149:8848
+        namespace: 71f3a5cc-ab15-42c2-819f-6f1cbfcf96ac
       config:
         # docker启动nacos-server需要配置
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         file-extension: yaml
-        prefix: ${spring.application.name}
-        namespace: prod_namespace_id
+        group: DEFAULT_GROUP
+        namespace: 71f3a5cc-ab15-42c2-819f-6f1cbfcf96ac
+        extension-configs:
+          - dataId: youlai-auth.yaml
+            group: DEFAULT_GROUP
+            refresh: true

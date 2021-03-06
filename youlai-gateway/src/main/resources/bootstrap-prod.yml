@@ -10,8 +10,13 @@ spring:
     nacos:
       discovery:
         server-addr: http://47.117.127.149:8848
-        namespace: prod_namespace_id
+        namespace: 71f3a5cc-ab15-42c2-819f-6f1cbfcf96ac
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         file-extension: yaml
-        namespace: prod_namespace_id
+        namespace: 71f3a5cc-ab15-42c2-819f-6f1cbfcf96ac
+        extension-configs:
+          - dataId: youlai-gateway.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+        group: DEFAULT_GROUP
