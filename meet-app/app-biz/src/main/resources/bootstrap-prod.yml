@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: youlai-auth
+    name: meet-app
   cloud:
     nacos:
       discovery:
