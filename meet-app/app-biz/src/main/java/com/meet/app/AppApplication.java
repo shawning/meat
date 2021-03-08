@@ -20,6 +20,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableTransactionManagement
 public class AppApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AppApplication.class);
+        SpringApplication.run(AppApplication.class, args);
     }
 }
