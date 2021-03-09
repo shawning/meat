@@ -1,13 +1,13 @@
-package ${basePackage}.controller;
+package com.meet.app.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.nacos.common.utils.HttpMethod;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import ${basePackage}.entity.${tbl.entityName};
-import ${basePackage}.service.${tbl.entityName}Service;
-import ${basePackage}.vo.${tbl.entityName}Vo;
+import com.meet.app.entity.BizTags;
+import com.meet.app.service.BizTagsService;
+import com.meet.app.vo.BizTagsVo;
 import com.youlai.common.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -24,90 +24,90 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * ${tbl.comment}管理
- * @author ${author}
+ * 用户标签管理
+ * @author xiaoning
  */
 
 @Slf4j
 @RestController
-@RequestMapping("/api.admin/v1/${tbl.propsName}")
-@Api(value = "/api.admin/v1/${tbl.propsName}", tags = {"${tbl.entityName} API"}, description = "${tbl.comment} API")
-public class ${tbl.entityName}Controller {
+@RequestMapping("/api.admin/v1/bizTags")
+@Api(value = "/api.admin/v1/bizTags", tags = {"用户标签 API"}, description = "用户标签 API")
+public class BizTagsController {
     @Autowired
-    private ${tbl.entityName}Service ${tbl.propsName}Service;
+    private BizTagsService bizTagsService;
 
     @PostMapping("/list")
-    @ApiOperation(notes = "${tbl.comment}列表",
+    @ApiOperation(notes = "用户标签列表",
             httpMethod = HttpMethod.POST,
             response = Result.class,
-            value = "${tbl.comment}列表",
+            value = "用户标签列表",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "${tbl.propsName}Vo", value = "${tbl.comment}列表", required = true, paramType = "body", dataType = "${tbl.entityName}Vo")
-    public Result list(@RequestBody ${tbl.entityName}Vo ${tbl.propsName}Vo) {
-        return ${tbl.propsName}Service.list(${tbl.propsName}Vo);
+    @ApiImplicitParam(name = "bizTagsVo", value = "用户标签列表", required = true, paramType = "body", dataType = "BizTagsVo")
+    public Result list(@RequestBody BizTagsVo bizTagsVo) {
+        return bizTagsService.list(bizTagsVo);
     }
-    @ApiOperation(notes = "${tbl.comment}详情",
+    @ApiOperation(notes = "用户标签详情",
                 httpMethod = HttpMethod.GET,
                 response = Result.class,
-                value = "${tbl.comment}详情",
+                value = "用户标签详情",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParam(name = "id", value = "标签ID", required = true, paramType = "path", dataType = "Long")
     @GetMapping("/detail/{id}")
     public Result detail(@PathVariable Long id) {
-        return ${tbl.propsName}Service.detail(id);
+        return bizTagsService.detail(id);
     }
 
-    @ApiOperation(notes = "新增${tbl.comment}",
+    @ApiOperation(notes = "新增用户标签",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
-                value = "${tbl.comment}标签",
+                value = "用户标签标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "${tbl.entityName}", value = "实体JSON对象", required = true, paramType = "body", dataType = "${tbl.entityName}")
+    @ApiImplicitParam(name = "BizTags", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizTags")
     @PostMapping("/add")
-    public Result add(@RequestBody ${tbl.entityName} ${tbl.propsName}) {
-        return ${tbl.propsName}Service.add(${tbl.propsName});
+    public Result add(@RequestBody BizTags bizTags) {
+        return bizTagsService.add(bizTags);
     }
 
-    @ApiOperation(notes = "修改${tbl.comment}",
+    @ApiOperation(notes = "修改用户标签",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
-                value = "修改${tbl.comment}",
+                value = "修改用户标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "${tbl.propsName}", value = "实体JSON对象", required = true, paramType = "body", dataType = "${tbl.entityName}")
+            @ApiImplicitParam(name = "bizTags", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizTags")
     })
     @PutMapping(value = "/update")
     public Result update(
-            @RequestBody ${tbl.entityName} ${tbl.propsName}) {
-        return ${tbl.propsName}Service.update(${tbl.propsName});
+            @RequestBody BizTags bizTags) {
+        return bizTagsService.update(bizTags);
     }
 
-    @ApiOperation(notes = "删除多个${tbl.comment}",
+    @ApiOperation(notes = "删除多个用户标签",
             httpMethod = HttpMethod.DELETE,
             response = Result.class,
-            value = "删除多个${tbl.comment}",
+            value = "删除多个用户标签",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParam(name = "ids", value = "以,分割拼接字符串", required = true, paramType = "query", dataType = "String")
     @DeleteMapping("/deletes/{ids}")
     public Result deletes(@PathVariable String ids) {
-        return ${tbl.propsName}Service.delete(ids);
+        return bizTagsService.delete(ids);
     }
 
-    @ApiOperation(notes = "删除单个${tbl.comment}",
+    @ApiOperation(notes = "删除单个用户标签",
                 httpMethod = HttpMethod.DELETE,
                 response = Result.class,
-                value = "删除单个${tbl.comment}",
+                value = "删除单个用户标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
         @ApiImplicitParam(name = "id", value = "数据ID", required = true, paramType = "query", dataType = "Long")
         @DeleteMapping("/delete/{ids}")
         public Result delete(@PathVariable Long id) {
-            return ${tbl.propsName}Service.delete(id);
+            return bizTagsService.delete(id);
         }
 
 }

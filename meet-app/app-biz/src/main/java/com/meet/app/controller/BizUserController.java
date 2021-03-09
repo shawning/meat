@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api.app/v1/bizUser")
-@Api(value = "/api.app/v1/bizUser", tags = {"BizUser API 用户信息"}, description = "用户信息 API")
+@Api(value = "/api.app/v1/bizUser", tags = {"用户信息 API"}, description = "用户信息 API")
 public class BizUserController {
     @Autowired
     private BizUserService bizUserService;

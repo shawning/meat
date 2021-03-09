@@ -40,14 +40,14 @@ public class BizUserTagController {
     @Autowired
     private BizUserTagService bizUserTagService;
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @ApiOperation(notes = "标签列表",
-            httpMethod = HttpMethod.GET,
+            httpMethod = HttpMethod.POST,
             response = Result.class,
             value = "标签列表",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "bizUserTagVo", value = "标签列表", required = true, paramType = "body", dataType = "BizUserTagVo")
+    @ApiImplicitParam(name = "bizUserTagVo", value = "标签列表 API", required = true, paramType = "body", dataType = "BizUserTagVo")
     public Result list(@RequestBody BizUserTagVo bizUserTagVo) {
         return bizUserTagService.list(bizUserTagVo);
     }

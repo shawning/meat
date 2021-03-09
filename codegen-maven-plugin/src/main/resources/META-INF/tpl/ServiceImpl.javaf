@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -12,7 +13,9 @@ import ${basePackage}.entity.${tbl.entityName};
 import ${basePackage}.service.${tbl.entityName}Service;
 import ${basePackage}.vo.${tbl.entityName}Vo;
 import com.youlai.common.result.Result;
+import com.youlai.common.web.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -35,8 +38,6 @@ import java.util.Date;
 public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}Mapper, ${tbl.entityName}> implements ${tbl.entityName}Service {
 
 
-    @Autowired
-    private RedisService redisService;
 
     @Override
     public Result list(${tbl.entityName}Vo ${tbl.propsName}Vo) {
@@ -81,13 +82,13 @@ public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}M
         }
         <#list tbl.fields as field>
         <#if field.propsName=='createBy'>
-        ${tbl.propsName}.setCreateBy(redisService.getUserId());
+        ${tbl.propsName}.setCreateBy(RequestUtils.getUserId());
         </#if>
         <#if field.propsName=='createByName'>
-        ${tbl.propsName}.setCreateByName(redisService.getUserName());
+        ${tbl.propsName}.setCreateByName(RequestUtils.getUsername());
         </#if>
         <#if field.propsName=='createDate'>
-        ${tbl.propsName}.setCreateDate(new Date());
+        ${tbl.propsName}.setCreateDate(new Date(System.currentTimeMillis()));
         </#if>
         </#list>
         ${tbl.propsName}.setIsAvailable(1);
@@ -107,13 +108,13 @@ public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}M
         }
         <#list tbl.fields as field>
         <#if field.propsName=='updateBy'>
-        ${tbl.propsName}New.setUpdateBy(redisService.getUserId());
+        ${tbl.propsName}New.setUpdateBy(RequestUtils.getUserId());
         </#if>
         <#if field.propsName=='updateByName'>
-        ${tbl.propsName}New.setUpdateByName(redisService.getUserName());
+        ${tbl.propsName}New.setUpdateByName(RequestUtils.getUsername());
         </#if>
         <#if field.propsName=='updateDate'>
-        ${tbl.propsName}New.setUpdateDate(new Date());
+        ${tbl.propsName}New.setUpdateDate(new Date(System.currentTimeMillis()));
         </#if>
         </#list>
         return Result.judge(baseMapper.updateById(${tbl.propsName}));

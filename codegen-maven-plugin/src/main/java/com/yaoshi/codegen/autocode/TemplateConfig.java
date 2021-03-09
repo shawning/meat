@@ -57,7 +57,7 @@ public class TemplateConfig {
                 configuration.setObjectWrapper(new DefaultObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS));
                 configuration.setDefaultEncoding("UTF-8");
                 String outputDir = this.globalConfig.getOutputDir();
-                String[] ftlList = {"Controller.javaf", "Mapper.javaf", "Mapper.xmlf", "Model.javaf", "Service.javaf", "ServiceImpl.javaf",
+                String[] ftlList = {"Controller.javaf", "Mapper.javaf", "Mapper.xmlf", "Entity.javaf", "Service.javaf", "ServiceImpl.javaf",
                         "Vo.javaf", "List.vuef", "Form.vuef", "Api.jsf", "Menu.jsf"};
                 //获取或创建一个模版。
                 for (TableInfo table : tableInfoList) {
@@ -77,8 +77,8 @@ public class TemplateConfig {
                                 if (!dicFile.exists()) {
                                     dicFile.mkdirs();
                                 }
-                                if (ftlName.startsWith("Model")) {
-                                    ftlName = ftlName.replace("Model", "");
+                                if (ftlName.startsWith("Entity")) {
+                                    ftlName = ftlName.replace("Entity", "");
                                 }
                                 writer = new OutputStreamWriter(new FileOutputStream(filePath + table.getEntityName() + ftlName.substring(0, ftlName.length() - 1)),
                                         StandardCharsets.UTF_8);

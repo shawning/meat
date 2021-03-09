@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api.app/v1/bizVersion")
-@Api(value = "/api.app/v1/bizVersion", tags = {"BizVersion API 应用版本升级"}, description = "应用版本管理 API")
+@Api(value = "/api.app/v1/bizVersion", tags = {"应用版本升级 API"}, description = "应用版本管理 API")
 public class BizVersionController {
     @Autowired
     private BizVersionService bizVersionService;

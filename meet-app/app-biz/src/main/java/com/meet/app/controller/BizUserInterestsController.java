@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api.admin/v1/bizUserInterests")
-@Api(value = "/api.admin/v1/bizUserInterests", tags = {"BizUserInterests API"}, description = "用户兴趣爱好 API")
+@Api(value = "/api.admin/v1/bizUserInterests", tags = {"用户兴趣爱好 API"}, description = "用户兴趣爱好 API")
 public class BizUserInterestsController {
     @Autowired
     private BizUserInterestsService bizUserInterestsService;
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @ApiOperation(notes = "用户兴趣爱好列表",
-            httpMethod = HttpMethod.GET,
+            httpMethod = HttpMethod.POST,
             response = Result.class,
             value = "用户兴趣爱好列表",
             produces = MediaType.APPLICATION_JSON_VALUE,
