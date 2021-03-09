@@ -5,6 +5,7 @@ import com.alibaba.nacos.common.utils.HttpMethod;
 import com.meet.app.entity.BizUser;
 import com.meet.app.service.BizUserService;
 import com.youlai.common.result.Result;
+import com.youlai.common.web.util.RequestUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class BizUserController {
     public Result getBizUser(@PathVariable("phone") String phone){
         Result result = bizUserService.getBizUserByPhone(phone);
         log.info("result"+result.getData());
+        RequestUtils.getUserId();
         return bizUserService.getBizUserByPhone(phone);
     }
 

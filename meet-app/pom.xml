@@ -21,11 +21,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.youlai</groupId>
             <artifactId>common-core</artifactId>
             <version>${youlai.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!-- spring cloud 2020.0.0内置的openfeign3.0.0和spring cloud alibaba框架nacos、seata冲突临时解决方案-->
         <dependency>

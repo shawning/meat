@@ -14,6 +14,10 @@ public interface AuthConstants {
     String JWT_TOKEN_PREFIX = "Bearer ";
 
     /**
+     * Basic认证前缀
+     */
+    String BASIC_PREFIX = "Basic ";
+    /**
      * JWT载体key
      */
     String JWT_PAYLOAD_KEY = "payload";
@@ -44,6 +48,9 @@ public interface AuthConstants {
     String BCRYPT = "{bcrypt}";
 
     String JWT_USER_ID_KEY = "id";
+
+    String USER_NAME_KEY="username";
+
 
     String JWT_CLIENT_ID_KEY = "client_id";
 

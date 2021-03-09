@@ -1,24 +1,27 @@
 package ${basePackage}.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ${mainGroup}.core.support.Sort;
+
 import ${basePackage}.mapper.${tbl.entityName}Mapper;
-import ${basePackage}.model.${tbl.entityName};
+import ${basePackage}.entity.${tbl.entityName};
 import ${basePackage}.service.${tbl.entityName}Service;
-import ${mainGroup}.core.redis.service.RedisService;
 import ${basePackage}.vo.${tbl.entityName}Vo;
-import lombok.NonNull;
-import org.apache.commons.lang.StringUtils;
+import com.youlai.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.jianjin.log.service.LogService;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.youlai.common.result.ResultCode.DATA_IS_NULL;
+import static com.youlai.common.result.ResultCode.PARAM_ERROR;
 
 import java.util.Date;
 
@@ -31,16 +34,16 @@ import java.util.Date;
 @Service
 public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}Mapper, ${tbl.entityName}> implements ${tbl.entityName}Service {
 
-    @Autowired
-    private LogService logService;
+
     @Autowired
     private RedisService redisService;
 
     @Override
-    public IPage<${tbl.entityName}> select${tbl.entityName}List(${tbl.entityName}Vo ${tbl.propsName}Vo) {
+    public Result list(${tbl.entityName}Vo ${tbl.propsName}Vo) {
         if (${tbl.propsName}Vo == null) {
-            return this.page(new Page<>(), Wrappers.emptyWrapper());
+            return Result.success(baseMapper.selectPage(new Page<>(), Wrappers.emptyWrapper()));
         }
+        Page page = new Page<>(${tbl.propsName}Vo.getCurrentPage(), ${tbl.propsName}Vo.getPageSize());
         LambdaQueryWrapper<${tbl.entityName}> queryWrapper = new LambdaQueryWrapper<>();
         <#list tbl.fields as field>
         <#if field.propsName!='id'
@@ -66,15 +69,16 @@ public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}M
         </#if>
         </#if>
         </#list>
-
-        Page<${tbl.entityName}> page = new Page<>();
-        Sort.bind(${tbl.propsName}Vo, page, true);
-        return this.page(page, queryWrapper);
+        IPage<${tbl.entityName}> result = baseMapper.selectPage(page,queryWrapper);
+        return Result.success(result.getRecords(),result.getTotal());
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean save${tbl.entityName}(@NonNull ${tbl.entityName} ${tbl.propsName}) {
+    public Result add(@NonNull ${tbl.entityName} ${tbl.propsName}) {
+        if (${tbl.propsName} == null){
+            return Result.failed(PARAM_ERROR);
+        }
         <#list tbl.fields as field>
         <#if field.propsName=='createBy'>
         ${tbl.propsName}.setCreateBy(redisService.getUserId());
@@ -87,94 +91,51 @@ public class ${tbl.entityName}ServiceImpl extends ServiceImpl<${tbl.entityName}M
         </#if>
         </#list>
         ${tbl.propsName}.setIsAvailable(1);
-
-        /*
-          添加日志
-        */
-        logService.of(()->Payload.builder()
-        .bizType(BizType.BACK_BIZ)
-        .systemName("渐进后台管理")
-        .optionModule("系统模块")
-        .optionFunction("新增")
-        .optionUserId(redisService.getCurrentUser().getUserId())
-        .optionUserName(redisService.getCurrentUser().getUserName())
-        .optionType(OptionType.INSERT)
-        .payload(${tbl.propsName}, OptionType.INSERT)
-        .build());
-        return this.save(${tbl.propsName});
+        return Result.judge(baseMapper.insert(${tbl.propsName}));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean update${tbl.entityName}(${tbl.entityName} ${tbl.propsName}New) {
-        Long id = ${tbl.propsName}New.getId();
+    public Result update(${tbl.entityName} ${tbl.propsName}) {
+        Long id = ${tbl.propsName}.getId();
         if (id == null) {
-            return Boolean.FALSE;
+            return Result.failed(PARAM_ERROR);
         }
-        ${tbl.entityName} ${tbl.propsName} = this.getById(id);
-
+        ${tbl.entityName} ${tbl.propsName}New = baseMapper.selectById(${tbl.propsName}.getId());
+        if(${tbl.propsName}New == null){
+            return Result.failed(DATA_IS_NULL);
+        }
         <#list tbl.fields as field>
-        <#if field.propsName!='id'
-        &&field.propsName!='isAvailable'
-        &&field.propsName!='createName'
-        &&field.propsName!='createByName'
-        &&field.propsName!='updateByName'
-        &&field.propsName!='updateName'
-        &&field.propsName!='createTime'
-        &&field.propsName!='createDate'
-        &&field.propsName!='updateTime'
-        &&field.propsName!='updateDate'
-        &&field.propsName!='createBy'
-        &&field.propsName!='updateBy'>
-        ${tbl.propsName}.set${field.entityName}(${tbl.propsName}New.get${field.entityName}());
-        </#if>
         <#if field.propsName=='updateBy'>
-        ${tbl.propsName}.setUpdateBy(redisService.getUserId());
+        ${tbl.propsName}New.setUpdateBy(redisService.getUserId());
         </#if>
         <#if field.propsName=='updateByName'>
-        ${tbl.propsName}.setUpdateByName(redisService.getUserName());
+        ${tbl.propsName}New.setUpdateByName(redisService.getUserName());
         </#if>
         <#if field.propsName=='updateDate'>
-        ${tbl.propsName}.setUpdateDate(new Date());
+        ${tbl.propsName}New.setUpdateDate(new Date());
         </#if>
         </#list>
-        /*
-         添加日志
-        */
-        logService.of(()->Payload.builder()
-        .bizType(BizType.BACK_BIZ)
-        .systemName("渐进后台管理")
-        .optionModule("系统模块")
-        .optionFunction("修改")
-        .optionUserId(redisService.getCurrentUser().getUserId())
-        .optionUserName(redisService.getCurrentUser().getUserName())
-        .optionType(OptionType.UPDATE)
-        .payload(${tbl.propsName}, ${tbl.propsName}New)
-        .build());
-        return this.updateById(${tbl.propsName});
+        return Result.judge(baseMapper.updateById(${tbl.propsName}));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean delete${tbl.entityName}(@NonNull Long id) {
-        /*
-        添加日志
-        */
-        logService.of(()->Payload.builder()
-        .bizType(BizType.BACK_BIZ)
-        .systemName("渐进后台管理")
-        .optionModule("系统模块")
-        .optionFunction("删除")
-        .optionUserId(redisService.getCurrentUser().getUserId())
-        .optionUserName(redisService.getCurrentUser().getUserName())
-        .optionType(OptionType.DELETE)
-        .payload(this.getById(id), OptionType.DELETE)
-        .build());
-        return this.removeById(id);
+    public Result delete(@NonNull String ids) {
+        List<String> idList = Arrays.asList(ids.split(","));
+        return Result.judge(baseMapper.deleteBatchIds(idList));
+    }
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result delete(@NonNull Long id) {
+        return Result.judge(baseMapper.deleteById(id));
     }
 
     @Override
-    public ${tbl.entityName} get${tbl.entityName}(@NonNull Long id){
-        return this.getById(id);
+    public Result detail(@NonNull Long id){
+        QueryWrapper<${tbl.entityName}> query = new QueryWrapper<>();
+        query.eq("ID", id);
+        query().eq("IS_AVLIABLE",1);
+        return Result.success(baseMapper.selectOne(query));
     }
 }

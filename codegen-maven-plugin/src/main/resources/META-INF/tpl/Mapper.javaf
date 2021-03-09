@@ -1,7 +1,7 @@
 package ${basePackage}.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import ${basePackage}.model.${tbl.entityName};
+import ${basePackage}.entity.${tbl.entityName};
 import org.springframework.stereotype.Repository;
 
 /**

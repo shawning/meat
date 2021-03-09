@@ -49,6 +49,13 @@ public class Result<T> implements Serializable {
             return failed();
         }
     }
+    public static <T> Result<T> judge(Integer result) {
+        if (null != result && result >= 1) {
+            return success();
+        } else {
+            return failed();
+        }
+    }
 
     public static <T> Result<T> failed(IResultCode resultCode) {
         return result(resultCode.getCode(), resultCode.getMsg(), null);

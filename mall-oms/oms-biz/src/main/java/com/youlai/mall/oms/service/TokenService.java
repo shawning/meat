@@ -18,7 +18,7 @@ public interface TokenService {
     String generateToken();
 
     /**
-     * 校验 Token 是否正确
+     * 校验 Token 是否正确F
      * @param request 当前请求
      */
     void checkToken(HttpServletRequest request);

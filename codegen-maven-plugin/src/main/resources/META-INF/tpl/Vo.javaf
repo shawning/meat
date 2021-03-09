@@ -1,11 +1,10 @@
 package ${basePackage}.vo;
 
-import ${mainGroup}.core.support.PageVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.youlai.common.base.BaseVO;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,7 +16,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "${tbl.comment}列表查询入参")
-public class ${tbl.entityName}Vo extends PageVo {
+public class ${tbl.entityName}Vo extends BaseVO {
     <#list tbl.fields as field>
     <#if field.propsName!='id'
             &&field.propsName!='isAvailable'
