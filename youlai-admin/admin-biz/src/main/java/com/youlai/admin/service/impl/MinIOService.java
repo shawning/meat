@@ -17,7 +17,7 @@ import java.io.InputStream;
 @EnableConfigurationProperties({MinIOProperties.class})
 public class MinIOService implements InitializingBean {
 
-    private MinIOProperties minIOProperties;
+    private final MinIOProperties minIOProperties;
 
     public MinIOService(MinIOProperties minIOProperties){
         this.minIOProperties=minIOProperties;

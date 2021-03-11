@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/api.admin/v1/bizMedals")
-@Api(value = "/api.admin/v1/bizMedals", tags = {"勋章列表 API"}, description = "勋章 API")
+@RequestMapping("/api.app/v1/bizMedals")
+@Api(value = "/api.app/v1/bizMedals", tags = {"勋章列表 API"}, description = "勋章 API")
 public class BizMedalsController {
     @Autowired
     private BizMedalsService bizMedalsService;

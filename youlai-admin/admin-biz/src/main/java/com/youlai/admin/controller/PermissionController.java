@@ -22,7 +22,7 @@ import java.util.Arrays;
 @AllArgsConstructor
 public class PermissionController {
 
-    private ISysPermissionService iSysPermissionService;
+    private final ISysPermissionService iSysPermissionService;
 
     @ApiOperation(value = "列表分页", httpMethod = "GET")
     @ApiImplicitParams({

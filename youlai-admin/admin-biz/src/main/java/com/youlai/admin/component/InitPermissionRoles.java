@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class InitPermissionRoles implements CommandLineRunner {
 
-    private ISysPermissionService iSysPermissionService;
+    private final ISysPermissionService iSysPermissionService;
 
     @Override
     public void run(String... args) {

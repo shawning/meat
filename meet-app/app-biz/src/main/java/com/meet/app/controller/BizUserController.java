@@ -3,6 +3,7 @@ package com.meet.app.controller;
 import cn.hutool.json.JSONObject;
 import com.alibaba.nacos.common.utils.HttpMethod;
 import com.meet.app.entity.BizUser;
+import com.meet.app.entity.BizUserBlacklist;
 import com.meet.app.service.BizUserService;
 import com.youlai.common.result.Result;
 import com.youlai.common.web.util.RequestUtils;
@@ -75,4 +76,29 @@ public class BizUserController {
     public Result get(@PathVariable("id") Long id){
         return bizUserService.getBizUser(id);
     }
+
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "拉黑用户",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/addBlack")
+    public Result addBlack(@RequestBody BizUserBlacklist blacklist){
+        log.info("BizUser ===> ", new JSONObject(blacklist));
+        return bizUserService.addBlack(blacklist);
+    }
+
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "取消拉黑用户",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/deleteBlack")
+    public Result deleteBlack(@RequestBody BizUserBlacklist blacklist){
+        log.info("BizUser ===> ", new JSONObject(blacklist));
+        return bizUserService.deleteBlack(blacklist);
+    }
+
 }

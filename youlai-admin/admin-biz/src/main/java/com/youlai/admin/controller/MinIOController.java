@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class MinIOController {
 
-    private MinIOService minIOService;
+    private final MinIOService minIOService;
 
     @PostMapping
     @ApiOperation(value = "文件上传", httpMethod = "POST")

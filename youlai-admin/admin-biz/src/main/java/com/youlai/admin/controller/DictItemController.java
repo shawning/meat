@@ -29,7 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DictItemController {
 
-    private ISysDictItemService iSysDictItemService;
+    private final ISysDictItemService iSysDictItemService;
 
     @ApiOperation(value = "列表分页", httpMethod = "GET")
     @ApiImplicitParams({

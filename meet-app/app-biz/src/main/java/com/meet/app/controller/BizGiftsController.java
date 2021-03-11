@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/api.admin/v1/bizGifts")
-@Api(value = "/api.admin/v1/bizGifts", tags = {"礼物列表 API"}, description = "礼物 API")
+@RequestMapping("/api.app/v1/bizGifts")
+@Api(value = "/api.app/v1/bizGifts", tags = {"礼物列表 API"}, description = "礼物 API")
 public class BizGiftsController {
     @Autowired
     private BizGiftsService bizGiftsService;
@@ -62,10 +62,10 @@ public class BizGiftsController {
     @ApiOperation(notes = "新增礼物",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
-                value = "礼物标签",
+                value = "新增礼物",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "BizGifts", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizGifts")
+    @ApiImplicitParam(name = "bizGifts", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizGifts")
     @PostMapping("/add")
     public Result add(@RequestBody BizGifts bizGifts) {
         return bizGiftsService.add(bizGifts);

@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OauthClientDetailsController {
 
-    private IOauthClientDetailsService iOauthClientDetailsService;
+    private final IOauthClientDetailsService iOauthClientDetailsService;
 
     @ApiOperation(value = "列表分页", httpMethod = "GET")
     @ApiImplicitParams({

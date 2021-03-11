@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BizVersionMapper extends BaseMapper<BizVersion> {
-    public BizVersion findVersion(@Param("appType") Integer appType,@Param("appVersion") String appVsersion,@Param("appPlatform") Integer appPlatform);
-    public BizVersion findLastAvailableVersion(@Param("appType") Integer appType,@Param("appPlatform") Integer appPlatform);
+    BizVersion findVersion(@Param("appType") Integer appType, @Param("appVersion") String appVsersion, @Param("appPlatform") Integer appPlatform);
+    BizVersion findLastAvailableVersion(@Param("appType") Integer appType, @Param("appPlatform") Integer appPlatform);
 }

@@ -20,7 +20,7 @@ public class RedisClusterTests {
 
     private final Integer MAX_THREADS = 10;
 
-    private CountDownLatch countDownLatch = new CountDownLatch(1);
+    private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
     private final Integer REDIS_MASTER_NUM = 3;
 
@@ -28,7 +28,7 @@ public class RedisClusterTests {
     private RedisTemplate redisTemplate;
 
 
-    private HashMap map;
+    private final HashMap map;
 
     RedisClusterTests() {
         map = new HashMap();

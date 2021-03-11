@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/api.admin/v1/${tbl.propsName}")
-@Api(value = "/api.admin/v1/${tbl.propsName}", tags = {"${tbl.entityName} API"}, description = "${tbl.comment} API")
+@RequestMapping("/api.app/v1/${tbl.propsName}")
+@Api(value = "/api.app/v1/${tbl.propsName}", tags = {"${tbl.comment} API"}, description = "${tbl.comment} API")
 public class ${tbl.entityName}Controller {
     @Autowired
     private ${tbl.entityName}Service ${tbl.propsName}Service;

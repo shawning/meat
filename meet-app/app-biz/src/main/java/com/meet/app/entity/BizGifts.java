@@ -45,7 +45,7 @@ public class BizGifts implements Serializable {
     @NotNull(groups = {UpdateBizGifts.class}, message = "ID不能为空")
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
-    @ApiModelProperty(value = "礼物名称")
+    @ApiModelProperty(value = "礼物名称",required=true)
     @NotBlank(groups = {SaveBizGifts.class, UpdateBizGifts.class}, message = "礼物名称-giftName不能为空")
     @Size(groups =  {SaveBizGifts.class, UpdateBizGifts.class},max=50,message = "礼物名称-giftName长度不能超过50")
     @TableField("GIFT_NAME")

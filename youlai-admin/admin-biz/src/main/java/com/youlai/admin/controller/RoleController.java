@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RoleController {
 
-    private ISysRoleService iSysRoleService;
+    private final ISysRoleService iSysRoleService;
 
-    private ISysRoleMenuService iSysRoleMenuService;
+    private final ISysRoleMenuService iSysRoleMenuService;
 
-    private ISysRolePermissionService iSysRolePermissionService;
+    private final ISysRolePermissionService iSysRolePermissionService;
 
-    private ISysPermissionService iSysPermissionService;
+    private final ISysPermissionService iSysPermissionService;
 
     @ApiOperation(value = "列表分页", httpMethod = "GET")
     @ApiImplicitParams({

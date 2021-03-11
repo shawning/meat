@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DictController {
 
-    private ISysDictService iSysDictService;
+    private final ISysDictService iSysDictService;
 
-    private ISysDictItemService iSysDictItemService;
+    private final ISysDictItemService iSysDictItemService;
 
     @ApiOperation(value = "列表分页", httpMethod = "GET")
     @ApiImplicitParams({

@@ -25,7 +25,7 @@ public class AutoCodeGenerate {
                         .setUserName("chat")
                         .setPassword("1qaz!QAZ")
                         //表过滤 如果填写此项说明只生成 此表相关代码
-                        .setSpecified("biz_user_medal")
+                        .setSpecified("biz_user_blacklist")
                         .build()
                 )
                 .setPackageInfo(PackageConfig

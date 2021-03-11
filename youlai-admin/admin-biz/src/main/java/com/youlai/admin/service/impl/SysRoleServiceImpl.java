@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements ISysRoleService {
 
-    private ISysRoleMenuService iSysRoleMenuService;
-    private ISysUserRoleService iSysUserRoleService;
-    private ISysRolePermissionService iSysRolePermissionService;
+    private final ISysRoleMenuService iSysRoleMenuService;
+    private final ISysUserRoleService iSysUserRoleService;
+    private final ISysRolePermissionService iSysRolePermissionService;
 
     @Override
     public boolean add(SysRole role) {

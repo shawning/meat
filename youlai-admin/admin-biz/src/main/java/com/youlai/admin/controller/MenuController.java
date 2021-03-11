@@ -30,8 +30,8 @@ import java.util.List;
 @AllArgsConstructor
 public class MenuController {
 
-    private ISysMenuService iSysMenuService;
-    private ISysRoleMenuService iSysRoleMenuService;
+    private final ISysMenuService iSysMenuService;
+    private final ISysRoleMenuService iSysRoleMenuService;
 
     @ApiOperation(value = "菜单列表", httpMethod = "GET")
     @ApiImplicitParams({

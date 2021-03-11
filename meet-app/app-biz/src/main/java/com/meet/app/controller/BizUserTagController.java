@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Api(tags = "用户标签")
 @RestController
-@RequestMapping("/api.admin/v1/userTag")
+@RequestMapping("/api.app/v1/userTag")
 @AllArgsConstructor
 @Slf4j
 public class BizUserTagController {
