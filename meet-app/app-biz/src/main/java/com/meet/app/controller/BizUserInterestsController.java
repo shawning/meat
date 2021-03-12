@@ -56,7 +56,7 @@ public class BizUserInterestsController {
             value = "用户兴趣爱好标签",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "BizUserInterests", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserInterests")
+    @ApiImplicitParam(name = "bizUserInterests", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserInterests")
     @PostMapping("/add")
     public Result add(@RequestBody BizUserInterests bizUserInterests) {
         return bizUserInterestsService.add(bizUserInterests);

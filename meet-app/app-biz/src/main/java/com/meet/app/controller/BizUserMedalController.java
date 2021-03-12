@@ -65,7 +65,7 @@ public class BizUserMedalController {
                 value = "用户勋章标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "BizUserMedal", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserMedal")
+    @ApiImplicitParam(name = "bizUserMedal", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserMedal")
     @PostMapping("/add")
     public Result add(@RequestBody BizUserMedal bizUserMedal) {
         return bizUserMedalService.add(bizUserMedal);

@@ -65,7 +65,7 @@ public class BizUserGiftController {
                 value = "用户收到的礼物标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "BizUserGift", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserGift")
+    @ApiImplicitParam(name = "bizUserGift", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserGift")
     @PostMapping("/add")
     public Result add(@RequestBody BizUserGift bizUserGift) {
         return bizUserGiftService.add(bizUserGift);

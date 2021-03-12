@@ -65,7 +65,7 @@ public class BizTagsController {
                 value = "用户标签标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "BizTags", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizTags")
+    @ApiImplicitParam(name = "bizTags", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizTags")
     @PostMapping("/add")
     public Result add(@RequestBody BizTags bizTags) {
         return bizTagsService.add(bizTags);

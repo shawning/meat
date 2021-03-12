@@ -70,7 +70,7 @@ public class BizUserTagController {
             value = "新增标签",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "BizUserTag", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserTag")
+    @ApiImplicitParam(name = "bizUserTag", value = "实体JSON对象", required = true, paramType = "body", dataType = "BizUserTag")
     @PostMapping("/add")
     public Result add(@RequestBody BizUserTag bizUserTag) {
         return bizUserTagService.add(bizUserTag);

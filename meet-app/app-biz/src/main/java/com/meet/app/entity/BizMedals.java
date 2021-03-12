@@ -46,7 +46,7 @@ public class BizMedals implements Serializable {
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
     @ApiModelProperty(value = "勋章名称")
-    @NotBlank(groups = {SaveBizMedals.class, UpdateBizMedals.class}, message = "勋章名称-medalName不能为空")
+    @NotEmpty(message = "勋章名称不能为空")
     @Size(groups =  {SaveBizMedals.class, UpdateBizMedals.class},max=50,message = "勋章名称-medalName长度不能超过50")
     @TableField("MEDAL_NAME")
     private String medalName;
