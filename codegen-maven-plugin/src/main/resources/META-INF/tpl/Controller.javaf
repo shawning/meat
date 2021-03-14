@@ -65,7 +65,7 @@ public class ${tbl.entityName}Controller {
                 value = "${tbl.comment}标签",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParam(name = "${tbl.entityName}", value = "实体JSON对象", required = true, paramType = "body", dataType = "${tbl.entityName}")
+    @ApiImplicitParam(name = "${tbl.propsName}", value = "实体JSON对象", required = true, paramType = "body", dataType = "${tbl.entityName}")
     @PostMapping("/add")
     public Result add(@RequestBody ${tbl.entityName} ${tbl.propsName}) {
         return ${tbl.propsName}Service.add(${tbl.propsName});

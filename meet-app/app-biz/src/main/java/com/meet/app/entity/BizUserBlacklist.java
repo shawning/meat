@@ -3,6 +3,8 @@ package com.meet.app.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
@@ -20,8 +22,10 @@ import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @TableName("biz_user_blacklist")
 @ApiModel(description = "我的黑名单属性")
+@Builder
 /**
 @LogTable(modelName = "我的黑名单",
         propertyName = "bizUserBlacklist",

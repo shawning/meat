@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,8 @@ public class BizInterestsController {
     public Result list(@RequestBody BizInterestsVo bizInterestsVo) {
         return bizInterestsService.list(bizInterestsVo);
     }
+
+    @ApiIgnore
     @ApiOperation(notes = "用户兴趣爱好详情",
                 httpMethod = HttpMethod.GET,
                 response = Result.class,
@@ -59,6 +62,7 @@ public class BizInterestsController {
         return bizInterestsService.detail(id);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "新增用户兴趣爱好",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -71,6 +75,7 @@ public class BizInterestsController {
         return bizInterestsService.add(bizInterests);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改用户兴趣爱好",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -86,6 +91,7 @@ public class BizInterestsController {
         return bizInterestsService.update(bizInterests);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除多个用户兴趣爱好",
             httpMethod = HttpMethod.DELETE,
             response = Result.class,
@@ -98,6 +104,7 @@ public class BizInterestsController {
         return bizInterestsService.delete(ids);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除单个用户兴趣爱好",
                 httpMethod = HttpMethod.DELETE,
                 response = Result.class,

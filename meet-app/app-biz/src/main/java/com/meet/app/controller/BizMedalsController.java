@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,12 +55,16 @@ public class BizMedalsController {
                 value = "勋章详情",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    @ApiIgnore
     @ApiImplicitParam(name = "id", value = "标签ID", required = true, paramType = "path", dataType = "Long")
     @GetMapping("/detail/{id}")
     public Result detail(@PathVariable Long id) {
         return bizMedalsService.detail(id);
     }
 
+
+    @ApiIgnore
     @ApiOperation(notes = "新增勋章",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -72,6 +77,7 @@ public class BizMedalsController {
         return bizMedalsService.add(bizMedals);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改勋章",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -87,6 +93,7 @@ public class BizMedalsController {
         return bizMedalsService.update(bizMedals);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除多个勋章",
             httpMethod = HttpMethod.DELETE,
             response = Result.class,
@@ -99,6 +106,7 @@ public class BizMedalsController {
         return bizMedalsService.delete(ids);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除单个勋章",
                 httpMethod = HttpMethod.DELETE,
                 response = Result.class,

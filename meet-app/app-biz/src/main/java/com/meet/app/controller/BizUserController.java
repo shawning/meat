@@ -84,9 +84,9 @@ public class BizUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @PostMapping("/addBlack")
-    public Result addBlack(@RequestBody BizUserBlacklist blacklist){
-        log.info("BizUser ===> ", new JSONObject(blacklist));
-        return bizUserService.addBlack(blacklist);
+    public Result addBlack(@RequestParam(defaultValue = "1") Long id){
+        log.info("BizUser ===> ", id);
+        return bizUserService.addBlack(id);
     }
 
     @ApiOperation(
@@ -96,9 +96,31 @@ public class BizUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @PostMapping("/deleteBlack")
-    public Result deleteBlack(@RequestBody BizUserBlacklist blacklist){
-        log.info("BizUser ===> ", new JSONObject(blacklist));
-        return bizUserService.deleteBlack(blacklist);
+    public Result deleteBlack(@RequestParam(defaultValue = "1") Long id){
+        log.info("BizUser ===> ", id);
+        return bizUserService.deleteBlack(id);
+    }
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "添加好友",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/addFriend")
+    public Result addFriend(@RequestParam(defaultValue = "1") Long id){
+        log.info("id ===> ", id);
+        return bizUserService.addFriend(id);
+    }
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "删除好友",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/deleteFriend")
+    public Result deleteFriend(@RequestParam(defaultValue = "1") Long id){
+        log.info("id ===> ", id);
+        return bizUserService.deleteFriend(id);
     }
 
 }

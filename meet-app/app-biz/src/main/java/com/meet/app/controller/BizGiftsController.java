@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,9 @@ public class BizGiftsController {
     public Result list(@RequestBody BizGiftsVo bizGiftsVo) {
         return bizGiftsService.list(bizGiftsVo);
     }
+
+
+    @ApiIgnore
     @ApiOperation(notes = "礼物详情",
                 httpMethod = HttpMethod.GET,
                 response = Result.class,
@@ -59,6 +63,7 @@ public class BizGiftsController {
         return bizGiftsService.detail(id);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "新增礼物",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -71,6 +76,7 @@ public class BizGiftsController {
         return bizGiftsService.add(bizGifts);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改礼物",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -86,6 +92,7 @@ public class BizGiftsController {
         return bizGiftsService.update(bizGifts);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除多个礼物",
             httpMethod = HttpMethod.DELETE,
             response = Result.class,
@@ -98,6 +105,7 @@ public class BizGiftsController {
         return bizGiftsService.delete(ids);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除单个礼物",
                 httpMethod = HttpMethod.DELETE,
                 response = Result.class,

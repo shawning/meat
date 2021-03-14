@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,8 @@ public class BizUserMedalController {
     public Result list(@RequestBody BizUserMedalVo bizUserMedalVo) {
         return bizUserMedalService.list(bizUserMedalVo);
     }
+
+    @ApiIgnore
     @ApiOperation(notes = "用户勋章详情",
                 httpMethod = HttpMethod.GET,
                 response = Result.class,
@@ -71,6 +74,7 @@ public class BizUserMedalController {
         return bizUserMedalService.add(bizUserMedal);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改用户勋章",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,

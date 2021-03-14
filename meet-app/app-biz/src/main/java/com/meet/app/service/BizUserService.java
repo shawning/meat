@@ -15,6 +15,9 @@ public interface BizUserService extends IService<BizUser> {
     Result getBizUser(Long id);
     Result getBizUserByPhone(String phone);
     Result add(BizUser bizUser);
-    Result addBlack(BizUserBlacklist bizUserBlacklist);
-    Result deleteBlack(BizUserBlacklist bizUserBlacklist);
+    Result addBlack(Long id);
+    Result deleteBlack(Long id);
+    Result addFriend(Long id);
+    Result deleteFriend(Long id);
+
 }

@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +53,7 @@ public class BizUserTagController {
         return bizUserTagService.list(bizUserTagVo);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "标签详情",
             httpMethod = HttpMethod.GET,
             response = Result.class,
@@ -76,6 +78,7 @@ public class BizUserTagController {
         return bizUserTagService.add(bizUserTag);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改标签",
             httpMethod = HttpMethod.POST,
             response = Result.class,
@@ -104,6 +107,7 @@ public class BizUserTagController {
         return bizUserTagService.delete(ids);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "查询用户标签",
             httpMethod = HttpMethod.GET,
             response = Result.class,

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +60,7 @@ public class BizUserGiftController {
         return bizUserGiftService.detail(id);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "新增用户收到的礼物",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -71,6 +73,7 @@ public class BizUserGiftController {
         return bizUserGiftService.add(bizUserGift);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改用户收到的礼物",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -86,10 +89,10 @@ public class BizUserGiftController {
         return bizUserGiftService.update(bizUserGift);
     }
 
-    @ApiOperation(notes = "删除多个用户收到的礼物",
+    @ApiOperation(notes = "删除用户收到的多个礼物",
             httpMethod = HttpMethod.DELETE,
             response = Result.class,
-            value = "删除多个用户收到的礼物",
+            value = "删除用户收到的多个礼物",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParam(name = "ids", value = "以,分割拼接字符串", required = true, paramType = "query", dataType = "String")

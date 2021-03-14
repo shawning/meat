@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,8 @@ public class BizTagsController {
     public Result list(@RequestBody BizTagsVo bizTagsVo) {
         return bizTagsService.list(bizTagsVo);
     }
+
+    @ApiIgnore
     @ApiOperation(notes = "用户标签详情",
                 httpMethod = HttpMethod.GET,
                 response = Result.class,
@@ -59,6 +62,7 @@ public class BizTagsController {
         return bizTagsService.detail(id);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "新增用户标签",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -71,6 +75,7 @@ public class BizTagsController {
         return bizTagsService.add(bizTags);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改用户标签",
                 httpMethod = HttpMethod.POST,
                 response = Result.class,
@@ -86,6 +91,7 @@ public class BizTagsController {
         return bizTagsService.update(bizTags);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除多个用户标签",
             httpMethod = HttpMethod.DELETE,
             response = Result.class,
@@ -98,6 +104,7 @@ public class BizTagsController {
         return bizTagsService.delete(ids);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "删除单个用户标签",
                 httpMethod = HttpMethod.DELETE,
                 response = Result.class,

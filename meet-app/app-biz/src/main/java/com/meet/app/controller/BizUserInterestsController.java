@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -38,6 +39,8 @@ public class BizUserInterestsController {
     public Result list(@RequestBody BizUserInterestsVo bizUserInterestsVo) {
         return bizUserInterestsService.list(bizUserInterestsVo);
     }
+
+    @ApiIgnore
     @ApiOperation(notes = "用户兴趣爱好详情",
             httpMethod = HttpMethod.GET,
             response = Result.class,
@@ -62,6 +65,7 @@ public class BizUserInterestsController {
         return bizUserInterestsService.add(bizUserInterests);
     }
 
+    @ApiIgnore
     @ApiOperation(notes = "修改用户兴趣爱好",
             httpMethod = HttpMethod.POST,
             response = Result.class,

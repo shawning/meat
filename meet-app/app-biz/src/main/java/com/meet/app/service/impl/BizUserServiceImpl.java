@@ -8,13 +8,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.meet.app.dto.AppUserDto;
 import com.meet.app.entity.BizUser;
 import com.meet.app.entity.BizUserBlacklist;
+import com.meet.app.entity.BizUserFriends;
 import com.meet.app.entity.BizVersion;
 import com.meet.app.mapper.BizUserBlacklistMapper;
+import com.meet.app.mapper.BizUserFriendsMapper;
 import com.meet.app.mapper.BizUserMapper;
 import com.meet.app.service.BizUserService;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
 import com.youlai.common.web.util.RequestUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +30,11 @@ import java.util.Date;
  * @Description
  */
 @Service
+@AllArgsConstructor
 public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> implements BizUserService {
-    @Autowired
     private BizUserBlacklistMapper bizUserBlacklistMapper;
+    private BizUserFriendsMapper bizUserFriendsMapper;
+    private BizUserMapper bizUserMapper;
 
     @Override
     public Result getBizUser(Long id) {
@@ -66,35 +71,80 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result addBlack(BizUserBlacklist bizUserBlacklist) {
-        if(bizUserBlacklist == null || bizUserBlacklist.getFriendId() == null){
+    public Result addBlack(Long userId) {
+        if(userId == null){
             return Result.failed("拉黑对象不能为空");
         }
-        bizUserBlacklist.setCreateBy(RequestUtils.getUserId());
-        bizUserBlacklist.setCreateByName(RequestUtils.getUsername());
-        bizUserBlacklist.setCreateDate(new Date(System.currentTimeMillis()));
-        bizUserBlacklist.setUserId(RequestUtils.getUserId());
-        bizUserBlacklist.setIsAvailable(1);
+        BizUser bizUser = bizUserMapper.selectById(userId);
+        if(bizUser == null){
+            return Result.failed("拉黑信息不存在");
+        }
+        BizUserBlacklist bizUserBlacklist = BizUserBlacklist.builder()
+                .userId(RequestUtils.getUserId())
+                .friendId(bizUser.getId())
+                .friendPhone(bizUser.getPhone())
+                .createBy(RequestUtils.getUserId())
+                .createByName(RequestUtils.getUsername())
+                .createDate(new Date(System.currentTimeMillis()))
+                .userId(RequestUtils.getUserId())
+                .isAvailable(1).build();
         return Result.judge(bizUserBlacklistMapper.insert(bizUserBlacklist));
     }
 
     @Override
-    public Result deleteBlack(BizUserBlacklist bizUserBlacklist) {
-        if(bizUserBlacklist == null || bizUserBlacklist.getFriendId() == null){
+    public Result deleteBlack(Long userId) {
+        if(userId == null){
             return Result.failed("取消拉黑对象不能为空");
         }
         LambdaQueryWrapper<BizUserBlacklist> queryWrapper = new LambdaQueryWrapper<>();
-        if(bizUserBlacklist.getFriendId() != null){
-            queryWrapper.eq(BizUserBlacklist::getFriendId, bizUserBlacklist.getFriendId());
-        }
+        queryWrapper.eq(BizUserBlacklist::getFriendId, userId);
         queryWrapper.eq(BizUserBlacklist::getUserId, RequestUtils.getUserId());
         queryWrapper.eq(BizUserBlacklist::getIsAvailable, 1);
-
         BizUserBlacklist bizUserBlacklistNew = bizUserBlacklistMapper.selectOne(queryWrapper);
         bizUserBlacklistNew.setUpdateBy(RequestUtils.getUserId());
         bizUserBlacklistNew.setUpdateByName(RequestUtils.getUsername());
         bizUserBlacklistNew.setUpdateDate(new Date(System.currentTimeMillis()));
-        bizUserBlacklist.setIsAvailable(0);
-        return Result.judge(bizUserBlacklistMapper.updateById(bizUserBlacklist));
+        bizUserBlacklistNew.setIsAvailable(0);
+        return Result.judge(bizUserBlacklistMapper.updateById(bizUserBlacklistNew));
+    }
+
+    @Override
+    public Result addFriend(Long id) {
+        if(id == null){
+            return Result.failed("好友不能为空");
+        }
+        BizUser bizUser = bizUserMapper.selectById(id);
+        if(bizUser == null){
+            return Result.failed("好友信息不存在");
+        }
+        BizUserFriends bizUserFriends = BizUserFriends.builder().userId(RequestUtils.getUserId())
+                .friendId(bizUser.getId())
+                .friendPhone(bizUser.getPhone())
+                .isAvailable(1)
+                .createBy(bizUser.getId())
+                .createByName(bizUser.getName())
+                .createDate(new Date(System.currentTimeMillis()))
+                .intimacy(1L)
+                .build();
+        return Result.judge(bizUserFriendsMapper.insert(bizUserFriends));
+    }
+
+    @Override
+    public Result deleteFriend(Long id) {
+        if(id == null){
+            return Result.failed("好友不能为空");
+        }
+        LambdaQueryWrapper<BizUserFriends> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BizUserFriends::getUserId, RequestUtils.getUserId());
+        queryWrapper.eq(BizUserFriends::getFriendId,id);
+        BizUserFriends bizUserFriends = bizUserFriendsMapper.selectOne(queryWrapper);
+        if(bizUserFriends == null){
+            return Result.failed("好友信息不存在");
+        }
+        bizUserFriends.setUpdateDate(new Date(System.currentTimeMillis()));
+        bizUserFriends.setUpdateBy(RequestUtils.getUserId());
+        bizUserFriends.setUpdateByName(RequestUtils.getUsername());
+        bizUserFriends.setIsAvailable(0);//至于无效
+        return Result.judge(bizUserFriendsMapper.updateById(bizUserFriends));
     }
 }

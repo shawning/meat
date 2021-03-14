@@ -3,6 +3,8 @@ package com.meet.app.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,8 +21,10 @@ import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @TableName("biz_user_friends")
 @ApiModel(description = "我的好友属性")
+@Builder
 /**
 @LogTable(modelName = "我的好友",
         propertyName = "bizUserFriends",
