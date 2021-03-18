@@ -11,9 +11,9 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "验证码登录")
-public class BizUserLoginValidCodeVo extends BaseVO {
+public class BizUserLoginValidCodeVo {
     @ApiModelProperty(value = "用户手机号", example = "13219873453", required = true)
     private String phone;
     @ApiModelProperty(value = "验证码", example = "1111", required = true)
