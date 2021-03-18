@@ -172,6 +172,9 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(StrUtil.isEmpty(phone)){
             return Result.failed("手机号码不能为空");
         }
+        if(RegexUtils.validateMobilePhone(phone)){
+            return Result.failed("手机号不合法");
+        }
         String validCode = "";
         boolean hasValidCode = redisTemplate.hasKey(phone+"_" +AuthConstants.SMS_VALID_CODE);
         if(hasValidCode){
