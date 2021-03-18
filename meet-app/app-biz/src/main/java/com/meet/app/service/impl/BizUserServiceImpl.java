@@ -177,7 +177,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(hasValidCode){
             validCode = redisTemplate.opsForValue().get(phone+"_" +AuthConstants.SMS_VALID_CODE).toString();
         }else {
-            validCode = RegexUtils.getFourRandom();
+            validCode = "8888";
+//            validCode = RegexUtils.getFourRandom();
         }
         redisTemplate.opsForValue().set(phone + "_" + AuthConstants.SMS_VALID_CODE, validCode, 10 * 60, TimeUnit.SECONDS);
         return Result.success(ValidCodeDto.builder().validCode(validCode).build());
