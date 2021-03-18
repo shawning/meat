@@ -87,4 +87,9 @@ public interface AuthConstants {
      * app客户端
      */
     String APP_CLIENT_ID="app";
+
+    /**
+     * 短信验证码
+     */
+    String SMS_VALID_CODE="VALID_CODE";
 }

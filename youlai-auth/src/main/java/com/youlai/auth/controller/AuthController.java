@@ -11,6 +11,7 @@ import com.youlai.common.constant.AuthConstants;
 import com.youlai.common.constant.GlobalConstants;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
+import com.youlai.common.utils.RegexUtils;
 import com.youlai.common.web.exception.BizException;
 //import com.youlai.mall.ums.api.MemberFeignService;
 //import com.youlai.mall.ums.pojo.UmsUser;
@@ -23,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
@@ -142,6 +144,7 @@ public class AuthController {
     }*/
 
     private UserFeignService userFeignService;
+    private RedisTemplate redisTemplate;
     /**
      * app认证
      * @param principal
@@ -155,6 +158,14 @@ public class AuthController {
         String username = parameters.get("username");
         if (StrUtil.isBlank(code)) {
             throw new BizException("code不能为空");
+        }
+        boolean hasValidCode = redisTemplate.hasKey(username+"_" +AuthConstants.SMS_VALID_CODE);
+        if(!hasValidCode){
+            throw new BizException("验证码不能为空");
+        }
+        String validCode = redisTemplate.opsForValue().get(username+"_" +AuthConstants.SMS_VALID_CODE).toString();
+        if(!validCode.equals(code)){
+            throw new BizException("验证码错误");
         }
         Result<AppUserDto> result = userFeignService.getUserByPhone(parameters.get("username"));
         if (ResultCode.USER_NOT_EXIST.getCode().equals(result.getCode())) { // 授权登录 会员信息不存在时 注册会员
@@ -177,6 +188,7 @@ public class AuthController {
                 .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
                 .expiresIn(oAuth2AccessToken.getExpiresIn())
                 .build();
+        redisTemplate.delete(username+"_" +AuthConstants.SMS_VALID_CODE);
         return Result.success(oauth2Token);
     }
 

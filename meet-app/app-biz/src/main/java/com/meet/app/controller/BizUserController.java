@@ -5,6 +5,9 @@ import com.alibaba.nacos.common.utils.HttpMethod;
 import com.meet.app.entity.BizUser;
 import com.meet.app.entity.BizUserBlacklist;
 import com.meet.app.service.BizUserService;
+import com.meet.app.vo.BizUserLoginPasswordVo;
+import com.meet.app.vo.BizUserLoginValidCodeVo;
+import com.meet.app.vo.BizUserSetPasswordVo;
 import com.youlai.common.result.Result;
 import com.youlai.common.web.util.RequestUtils;
 import io.swagger.annotations.Api;
@@ -122,5 +125,51 @@ public class BizUserController {
         log.info("id ===> ", id);
         return bizUserService.deleteFriend(id);
     }
+
+    @ApiOperation(
+            httpMethod = HttpMethod.GET,
+            response = Result.class,
+            value = "根据手机号获取验证码",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/getValidCode/{phone}")
+    public Result getValidCode(@PathVariable("phone") String phone){
+        return bizUserService.getValidCode(phone);
+    }
+
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "密码登录",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/loginByPwd")
+    public Result loginByPwd(@RequestBody BizUserLoginPasswordVo bizUserLoginPasswordVo){
+        log.info("bizUserLoginPasswordVo ===> ", new JSONObject(bizUserLoginPasswordVo));
+        return bizUserService.loginByPwd(bizUserLoginPasswordVo);
+    }
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "验证码登录",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/loginByValidCode")
+    public Result loginByValidCode(@RequestBody BizUserLoginValidCodeVo bizUserLoginValidCodeVo){
+        log.info("bizUserLoginValidCodeVo ===> ", new JSONObject(bizUserLoginValidCodeVo));
+        return bizUserService.loginByValidCode(bizUserLoginValidCodeVo);
+    }
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "设置密码",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/setPwd")
+    public Result setPwd(@RequestBody BizUserSetPasswordVo bizUserSetPasswordVo){
+        log.info("bizUserSetPasswordVo ===> ", new JSONObject(bizUserSetPasswordVo));
+        return bizUserService.setPwd(bizUserSetPasswordVo);
+    }
+
 
 }

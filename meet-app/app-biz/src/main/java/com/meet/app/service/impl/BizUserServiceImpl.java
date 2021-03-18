@@ -1,11 +1,13 @@
 package com.meet.app.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.meet.app.dto.AppUserDto;
+import com.meet.app.dto.ValidCodeDto;
 import com.meet.app.entity.BizUser;
 import com.meet.app.entity.BizUserBlacklist;
 import com.meet.app.entity.BizUserFriends;
@@ -14,15 +16,27 @@ import com.meet.app.mapper.BizUserBlacklistMapper;
 import com.meet.app.mapper.BizUserFriendsMapper;
 import com.meet.app.mapper.BizUserMapper;
 import com.meet.app.service.BizUserService;
+import com.meet.app.vo.BizUserLoginPasswordVo;
+import com.meet.app.vo.BizUserLoginValidCodeVo;
+import com.meet.app.vo.BizUserSetPasswordVo;
+import com.youlai.common.constant.AuthConstants;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
+import com.youlai.common.utils.RegexUtils;
 import com.youlai.common.web.util.RequestUtils;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
+import org.apache.naming.factory.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import static com.youlai.common.result.ResultCode.PARAM_IS_NULL;
 
 /**
  * @Author: 肖宁 xiaoning@visionet.com.cn
@@ -32,9 +46,11 @@ import java.util.Date;
 @Service
 @AllArgsConstructor
 public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> implements BizUserService {
+    private RedisTemplate redisTemplate;
     private BizUserBlacklistMapper bizUserBlacklistMapper;
     private BizUserFriendsMapper bizUserFriendsMapper;
     private BizUserMapper bizUserMapper;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Result getBizUser(Long id) {
@@ -59,6 +75,9 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
     public Result add(BizUser bizUser) {
         if(StringUtils.isEmpty(bizUser.getPhone())){
             return Result.failed("手机号不能为空");
+        }
+        if(RegexUtils.validateMobilePhone(bizUser.getPhone())){
+            return Result.failed("手机号不合法");
         }
         bizUser.setName(bizUser.getPhone());
         bizUser.setStatus(1);
@@ -146,5 +165,76 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         bizUserFriends.setUpdateByName(RequestUtils.getUsername());
         bizUserFriends.setIsAvailable(0);//至于无效
         return Result.judge(bizUserFriendsMapper.updateById(bizUserFriends));
+    }
+
+    @Override
+    public Result getValidCode(String phone) {
+        if(StrUtil.isEmpty(phone)){
+            return Result.failed("手机号码不能为空");
+        }
+        String validCode = "";
+        boolean hasValidCode = redisTemplate.hasKey(phone+"_" +AuthConstants.SMS_VALID_CODE);
+        if(hasValidCode){
+            validCode = redisTemplate.opsForValue().get(phone+"_" +AuthConstants.SMS_VALID_CODE).toString();
+        }else {
+            validCode = RegexUtils.getFourRandom();
+        }
+        redisTemplate.opsForValue().set(phone + "_" + AuthConstants.SMS_VALID_CODE, validCode, 10 * 60, TimeUnit.SECONDS);
+        return Result.success(ValidCodeDto.builder().validCode(validCode).build());
+    }
+
+    @Override
+    public Result loginByPwd(BizUserLoginPasswordVo bizUserLoginPasswordVo) {
+        if(bizUserLoginPasswordVo == null){
+            return Result.failed(PARAM_IS_NULL);
+        }
+        LambdaQueryWrapper<BizUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BizUser::getPhone, bizUserLoginPasswordVo.getPhone());
+        queryWrapper.eq(BizUser::getIsAvailable, 1);
+        BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserLoginPasswordVo.getPhone());
+        if(bizUser == null){
+            return Result.failed("用户不存在，请注册");
+        }
+        String password = passwordEncoder.encode(bizUserLoginPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+        if(!password.equals(bizUserLoginPasswordVo.getPassword())){
+            return Result.failed("用户密码错误");
+        }
+        redisTemplate.delete(bizUserLoginPasswordVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE);
+        return Result.success(bizUser);
+    }
+
+    @Override
+    public Result loginByValidCode(BizUserLoginValidCodeVo bizUserLoginValidCodeVo) {
+        if(bizUserLoginValidCodeVo == null){
+            return Result.failed(PARAM_IS_NULL);
+        }
+        BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserLoginValidCodeVo.getPhone());
+        if(bizUser == null){
+            return Result.failed("用户不存在，请注册");
+        }
+        boolean hasValidCode = redisTemplate.hasKey(bizUserLoginValidCodeVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE);
+        if(!hasValidCode){
+            return Result.failed("验证码无效");
+        }
+        String validCode = redisTemplate.opsForValue().get(bizUserLoginValidCodeVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE).toString();
+        if(!validCode.equals(bizUserLoginValidCodeVo.getValidCode())){
+            return Result.failed("验证码错误");
+        }
+        redisTemplate.delete(bizUserLoginValidCodeVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE);
+        return Result.success(bizUser);
+    }
+
+    @Override
+    public Result setPwd(BizUserSetPasswordVo bizUserSetPasswordVo) {
+        if(bizUserSetPasswordVo == null){
+            return Result.failed(PARAM_IS_NULL);
+        }
+        if(!bizUserSetPasswordVo.getPassword().equals(bizUserSetPasswordVo.getPasswordTwo())){
+            return Result.failed("两次密码一致");
+        }
+        String password = passwordEncoder.encode(bizUserSetPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+        BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserSetPasswordVo.getPhone());
+        bizUser.setPassword(password);
+        return Result.judge(bizUserMapper.updateById(bizUser));
     }
 }
