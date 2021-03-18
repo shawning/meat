@@ -29,10 +29,9 @@ import org.apache.logging.log4j.util.Strings;
 import org.apache.naming.factory.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +49,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
     private BizUserBlacklistMapper bizUserBlacklistMapper;
     private BizUserFriendsMapper bizUserFriendsMapper;
     private BizUserMapper bizUserMapper;
+//    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -196,7 +196,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(bizUser == null){
             return Result.failed("用户不存在，请注册");
         }
-        String password = passwordEncoder.encode(bizUserLoginPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+        String password = "";
+//        String password = passwordEncoder.encode(bizUserLoginPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
         if(!password.equals(bizUserLoginPasswordVo.getPassword())){
             return Result.failed("用户密码错误");
         }
@@ -233,7 +234,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(!bizUserSetPasswordVo.getPassword().equals(bizUserSetPasswordVo.getPasswordTwo())){
             return Result.failed("两次密码一致");
         }
-        String password = passwordEncoder.encode(bizUserSetPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+        String password = "";
+//        String password = passwordEncoder.encode(bizUserSetPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
         BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserSetPasswordVo.getPhone());
         bizUser.setPassword(password);
         return Result.judge(bizUserMapper.updateById(bizUser));
