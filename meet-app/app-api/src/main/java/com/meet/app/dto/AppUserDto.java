@@ -65,4 +65,6 @@ public class AppUserDto implements Serializable {
     private Integer isAvailable = 1;
     @ApiModelProperty(value = "oauth clientid")
     private String clientId;
+    @ApiModelProperty(value = "oauth password")
+    private String passInfo;
 }

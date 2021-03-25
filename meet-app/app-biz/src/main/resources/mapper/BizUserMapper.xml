@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.meet.app.entity.BizUser">
     <id column="ID" jdbcType="BIGINT" property="id"/>
     <result column="NAME" jdbcType="VARCHAR" property="name"/>
+    <result column="NICK_NAME" jdbcType="VARCHAR" property="nickName"/>
     <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
     <result column="PHONE" jdbcType="VARCHAR" property="phone"/>
     <result column="SEX" jdbcType="INTEGER" property="sex"/>
@@ -12,6 +13,25 @@
     <result column="STATUS" jdbcType="INTEGER" property="status"/>
     <result column="SMS_STATUS" jdbcType="INTEGER" property="smsStatus"/>
     <result column="VIP_TYPE" jdbcType="INTEGER" property="vipType"/>
+    <result column="REAL_NAME_AUTH" jdbcType="INTEGER" property="realNameAuth"/>
+    <result column="REAL_PERSON_AUTH" jdbcType="INTEGER" property="realPersonAuth"/>
+    <result column="PERSON_AGE" jdbcType="INTEGER" property="personAge"/>
+    <result column="PERSON_HEIGHT" jdbcType="DECIMAL" property="personHeight"/>
+    <result column="PERSON_WEIGHT" jdbcType="DECIMAL" property="personWeight"/>
+    <result column="PERSON_SHAPE" jdbcType="VARCHAR" property="personShape"/>
+    <result column="PERSON_JOB" jdbcType="VARCHAR" property="personJob"/>
+    <result column="YEAR_INCOME" jdbcType="VARCHAR" property="yearIncome"/>
+    <result column="PERSON_AREA_ID" jdbcType="INTEGER" property="personAreaId"/>
+    <result column="PERSON_AREA_NAME" jdbcType="VARCHAR" property="personAreaName"/>
+    <result column="LIVE_INFO" jdbcType="VARCHAR" property="liveInfo"/>
+    <result column="IS_APPOINTMENT" jdbcType="INTEGER" property="isAppointment"/>
+    <result column="IS_TOGETHER_BEFORE_MARRIED" jdbcType="INTEGER" property="isTogetherBeforeMarried"/>
+    <result column="OWN_HOUSE" jdbcType="INTEGER" property="ownHouse"/>
+    <result column="OWN_CAR" jdbcType="INTEGER" property="ownCar"/>
+    <result column="HIGH_VALUE" jdbcType="DECIMAL" property="highValue"/>
+    <result column="CHARM_VALUE" jdbcType="DECIMAL" property="charmValue"/>
+    <result column="PRAISED_VALUE" jdbcType="DECIMAL" property="praisedValue"/>
+    <result column="SIGNATURE" jdbcType="VARCHAR" property="signature"/>
     <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
     <result column="CREATE_BY" jdbcType="BIGINT" property="createBy"/>
     <result column="CREATE_BY_NAME" jdbcType="VARCHAR" property="createByName"/>
@@ -19,6 +39,7 @@
     <result column="UPDATE_BY" jdbcType="BIGINT" property="updateBy"/>
     <result column="UPDATE_BY_NAME" jdbcType="VARCHAR" property="updateByName"/>
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    <result column="PASS_INFO" jdbcType="VARCHAR" property="passInfo"/>
     <result column="IS_AVAILABLE" jdbcType="INTEGER" property="isAvailable"/>
   </resultMap>
   <!-- 以下是自查询定义方法 -->

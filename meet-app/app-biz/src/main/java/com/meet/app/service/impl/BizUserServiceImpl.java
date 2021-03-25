@@ -76,7 +76,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(StringUtils.isEmpty(bizUser.getPhone())){
             return Result.failed("手机号不能为空");
         }
-        if(RegexUtils.validateMobilePhone(bizUser.getPhone())){
+        if(!RegexUtils.validateMobilePhone(bizUser.getPhone())){
             return Result.failed("手机号不合法");
         }
         bizUser.setName(bizUser.getPhone());
@@ -85,6 +85,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         bizUser.setVipType(1);
         bizUser.setCreateDate(new Date(System.currentTimeMillis()));
         bizUser.setIsAvailable(1);
+        bizUser.setPassInfo(bizUser.getPhone());
         return Result.success(this.save(bizUser));
     }
 
@@ -172,7 +173,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(StrUtil.isEmpty(phone)){
             return Result.failed("手机号码不能为空");
         }
-        if(RegexUtils.validateMobilePhone(phone)){
+        if(!RegexUtils.validateMobilePhone(phone)){
             return Result.failed("手机号不合法");
         }
         String validCode = "";

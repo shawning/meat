@@ -83,6 +83,47 @@ public class AuthController {
         }
     }
 
+    /**
+     * app登录
+     * @param principal
+     * @param parameters
+     * @return
+     * @throws HttpRequestMethodNotSupportedException
+     */
+    @ApiOperation("OAuth2认证生成token")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "grant_type", defaultValue = "password", value = "授权模式", required = true),
+            @ApiImplicitParam(name = "client_id", defaultValue = "client", value = "Oauth2客户端ID", required = true),
+            @ApiImplicitParam(name = "client_secret", defaultValue = "123456", value = "Oauth2客户端秘钥", required = true),
+            @ApiImplicitParam(name = "refresh_token", value = "刷新token"),
+            @ApiImplicitParam(name = "username", defaultValue = "admin", value = "登录用户名"),
+            @ApiImplicitParam(name = "password", defaultValue = "123456", value = "登录密码"),
+
+            // 微信小程序认证参数（无小程序可忽略）
+            @ApiImplicitParam(name = "code", value = "小程序code"),
+            @ApiImplicitParam(name = "encryptedData", value = "包括敏感数据在内的完整用户信息的加密数据"),
+            @ApiImplicitParam(name = "iv", value = "加密算法的初始向量"),
+    })
+    @PostMapping("/login")
+    public Result login(
+            @ApiIgnore Principal principal,
+            @ApiIgnore @RequestParam Map<String, String> parameters
+    ) throws HttpRequestMethodNotSupportedException {
+        String clientId = parameters.get(AuthConstants.JWT_CLIENT_ID_KEY);
+        switch (clientId) {
+            case AuthConstants.APP_CLIENT_ID:  // APP认证
+                return this.handleForAPPAuth(principal, parameters);
+            default:
+                OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+                Oauth2Token oauth2Token = Oauth2Token.builder()
+                        .token(oAuth2AccessToken.getValue())
+                        .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
+                        .expiresIn(oAuth2AccessToken.getExpiresIn())
+                        .build();
+                return Result.success(oauth2Token);
+        }
+    }
+
 
     private WxMaService wxService;
 //    private MemberFeignService memberFeignService;
@@ -153,34 +194,58 @@ public class AuthController {
      * @throws HttpRequestMethodNotSupportedException
      */
     public Result handleForAPPAuth(Principal principal, Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
-
-        String code = parameters.get("code");
+        String password = "";
+        String type = parameters.get("type");
+        if(StrUtil.isEmpty(type)){
+            return Result.failed("登录类型不能为空");
+        }
         String username = parameters.get("username");
-        if (StrUtil.isBlank(code)) {
-            throw new BizException("code不能为空");
-        }
-        boolean hasValidCode = redisTemplate.hasKey(username+"_" +AuthConstants.SMS_VALID_CODE);
-        if(!hasValidCode){
-            throw new BizException("验证码不能为空");
-        }
-        String validCode = redisTemplate.opsForValue().get(username+"_" +AuthConstants.SMS_VALID_CODE).toString();
-        if(!validCode.equals(code)){
-            throw new BizException("验证码错误");
-        }
-        Result<AppUserDto> result = userFeignService.getUserByPhone(parameters.get("username"));
-        if (ResultCode.USER_NOT_EXIST.getCode().equals(result.getCode())) { // 授权登录 会员信息不存在时 注册会员
-            AppUserDto user = new AppUserDto();
-            user.setName(username);
-            user.setPhone(username);
-            user.setPassword((passwordEncoder.encode(username).replace(AuthConstants.BCRYPT, Strings.EMPTY)));
-            Result res = userFeignService.add(user);
-            if (!ResultCode.SUCCESS.getCode().equals(res.getCode())) {
-                throw new BizException("注册失败");
+        if(type.contentEquals("psd")){
+            password = parameters.get("password");
+            if(StrUtil.isEmpty(username) || StrUtil.isEmpty(password)){
+                return Result.failed("用户名密码不能为空");
+            }
+            Result<AppUserDto> result = userFeignService.getUserByPhone(username);
+            if (ResultCode.USER_NOT_EXIST.getCode().equals(result.getCode())) { // 授权登录 会员信息不存在时报错
+                return Result.failed("用户不存在");
+            }
+//            String passwordInput = (passwordEncoder.encode(password).replace(AuthConstants.BCRYPT, Strings.EMPTY));
+//            if(!passwordInput.equals(result.getData().getPassword())){
+//                return Result.failed("密码不正确");
+//            }
+
+        }else if(type.contentEquals("validCode")){
+            String code = parameters.get("code");
+            if (StrUtil.isBlank(code)) {
+                throw new BizException("code不能为空");
+            }
+            boolean hasValidCode = redisTemplate.hasKey(username+"_" +AuthConstants.SMS_VALID_CODE);
+            if(!hasValidCode){
+                throw new BizException("验证码不能为空");
+            }
+            String validCode = redisTemplate.opsForValue().get(username+"_" +AuthConstants.SMS_VALID_CODE).toString();
+            if(!validCode.equals(code)){
+                throw new BizException("验证码错误");
+            }
+            Result<AppUserDto> result = userFeignService.getUserByPhone(parameters.get("username"));
+            if (ResultCode.USER_NOT_EXIST.getCode().equals(result.getCode())) { // 授权登录 会员信息不存在时 注册会员
+                AppUserDto user = new AppUserDto();
+                user.setName(username);
+                user.setPhone(username);
+                user.setPassword((passwordEncoder.encode(username).replace(AuthConstants.BCRYPT, Strings.EMPTY)));
+                Result res = userFeignService.add(user);
+                if (!ResultCode.SUCCESS.getCode().equals(res.getCode())) {
+                    throw new BizException("注册失败");
+                }
+                password = username;
+            }else{//非注册
+                password = result.getData().getPassInfo();
             }
         }
-        String password = (passwordEncoder.encode(username).replace(AuthConstants.BCRYPT, Strings.EMPTY));
 
-        parameters.put("password", username);
+//        String password = (passwordEncoder.encode(username).replace(AuthConstants.BCRYPT, Strings.EMPTY));
+
+        parameters.put("password", password);
         // oauth2认证参数对应授权登录时注册会员的username、password信息，模拟通过oauth2的密码模式认证
         OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
         Oauth2Token oauth2Token = Oauth2Token.builder()

@@ -67,6 +67,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //                String password = passwordEncoder.encode(appUserDTO.getPhone()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
 //                appUserDTO.setPassword(password);
                 appUserDTO.setClientId(clientId);
+                appUserDTO.setStatus(appUserDTO.getIsAvailable());
                 user = new User(appUserDTO);
                 break;
         }
