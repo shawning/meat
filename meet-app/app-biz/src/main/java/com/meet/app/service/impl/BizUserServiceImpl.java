@@ -16,6 +16,7 @@ import com.meet.app.mapper.BizUserBlacklistMapper;
 import com.meet.app.mapper.BizUserFriendsMapper;
 import com.meet.app.mapper.BizUserMapper;
 import com.meet.app.service.BizUserService;
+import com.meet.app.vo.BizUserForgotPasswordVo;
 import com.meet.app.vo.BizUserLoginPasswordVo;
 import com.meet.app.vo.BizUserLoginValidCodeVo;
 import com.meet.app.vo.BizUserSetPasswordVo;
@@ -23,6 +24,7 @@ import com.youlai.common.constant.AuthConstants;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
 import com.youlai.common.utils.RegexUtils;
+import com.youlai.common.web.exception.BizException;
 import com.youlai.common.web.util.RequestUtils;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
@@ -238,10 +240,34 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(!bizUserSetPasswordVo.getPassword().equals(bizUserSetPasswordVo.getPasswordTwo())){
             return Result.failed("两次密码一致");
         }
-        String password = "";
-//        String password = passwordEncoder.encode(bizUserSetPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+//        String password = "";
+        String password = passwordEncoder.encode(bizUserSetPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
         BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserSetPasswordVo.getPhone());
         bizUser.setPassword(password);
+        bizUser.setPassInfo(bizUserSetPasswordVo.getPassword());
+        return Result.judge(bizUserMapper.updateById(bizUser));
+    }
+
+    @Override
+    public Result forgotPwd(BizUserForgotPasswordVo bizUserForgotPasswordVo) {
+        if(bizUserForgotPasswordVo == null){
+            return Result.failed(PARAM_IS_NULL);
+        }
+        boolean hasValidCode = redisTemplate.hasKey(bizUserForgotPasswordVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE);
+        if(!hasValidCode){
+            throw new BizException("验证码不能为空");
+        }
+        String validCode = redisTemplate.opsForValue().get(bizUserForgotPasswordVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE).toString();
+        if(!validCode.equals(bizUserForgotPasswordVo.getValidCode())){
+            throw new BizException("验证码错误");
+        }
+        BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserForgotPasswordVo.getPhone());
+        if(bizUser == null){
+            return Result.failed("用户不存在");
+        }
+        String password = passwordEncoder.encode(bizUserForgotPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
+        bizUser.setPassword(password);
+        bizUser.setPassInfo(bizUserForgotPasswordVo.getPassword());
         return Result.judge(bizUserMapper.updateById(bizUser));
     }
 }

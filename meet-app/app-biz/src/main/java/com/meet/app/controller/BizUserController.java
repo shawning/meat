@@ -5,6 +5,7 @@ import com.alibaba.nacos.common.utils.HttpMethod;
 import com.meet.app.entity.BizUser;
 import com.meet.app.entity.BizUserBlacklist;
 import com.meet.app.service.BizUserService;
+import com.meet.app.vo.BizUserForgotPasswordVo;
 import com.meet.app.vo.BizUserLoginPasswordVo;
 import com.meet.app.vo.BizUserLoginValidCodeVo;
 import com.meet.app.vo.BizUserSetPasswordVo;
@@ -17,6 +18,7 @@ import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -137,6 +139,7 @@ public class BizUserController {
         return bizUserService.getValidCode(phone);
     }
 
+    @ApiIgnore
     @ApiOperation(
             httpMethod = HttpMethod.POST,
             response = Result.class,
@@ -148,6 +151,7 @@ public class BizUserController {
         log.info("bizUserLoginPasswordVo ===> ", new JSONObject(bizUserLoginPasswordVo));
         return bizUserService.loginByPwd(bizUserLoginPasswordVo);
     }
+    @ApiIgnore
     @ApiOperation(
             httpMethod = HttpMethod.POST,
             response = Result.class,
@@ -169,6 +173,18 @@ public class BizUserController {
     public Result setPwd(@RequestBody BizUserSetPasswordVo bizUserSetPasswordVo){
         log.info("bizUserSetPasswordVo ===> ", new JSONObject(bizUserSetPasswordVo));
         return bizUserService.setPwd(bizUserSetPasswordVo);
+    }
+
+    @ApiOperation(
+            httpMethod = HttpMethod.POST,
+            response = Result.class,
+            value = "找回密码",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/forgotPwd")
+    public Result forgotPwd(@RequestBody BizUserForgotPasswordVo bizUserForgotPasswordVo){
+        log.info("bizUserForgotPasswordVo ===> ", new JSONObject(bizUserForgotPasswordVo));
+        return bizUserService.forgotPwd(bizUserForgotPasswordVo);
     }
 
 

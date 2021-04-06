@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.meet.app.entity.BizUser;
 import com.meet.app.entity.BizUserBlacklist;
 import com.meet.app.entity.BizUserFriends;
+import com.meet.app.vo.BizUserForgotPasswordVo;
 import com.meet.app.vo.BizUserLoginPasswordVo;
 import com.meet.app.vo.BizUserLoginValidCodeVo;
 import com.meet.app.vo.BizUserSetPasswordVo;
@@ -26,4 +27,5 @@ public interface BizUserService extends IService<BizUser> {
     Result loginByPwd(BizUserLoginPasswordVo bizUserLoginPasswordVo);
     Result loginByValidCode(BizUserLoginValidCodeVo bizUserLoginValidCodeVo);
     Result setPwd(BizUserSetPasswordVo bizUserSetPasswordVo);
+    Result forgotPwd(BizUserForgotPasswordVo bizUserForgotPasswordVo);
 }
