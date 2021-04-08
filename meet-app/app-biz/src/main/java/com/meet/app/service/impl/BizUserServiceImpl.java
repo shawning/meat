@@ -237,8 +237,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(bizUserSetPasswordVo == null){
             return Result.failed(PARAM_IS_NULL);
         }
-        if(!bizUserSetPasswordVo.getPassword().equals(bizUserSetPasswordVo.getPasswordTwo())){
-            return Result.failed("两次密码一致");
+        if(StrUtil.isBlank(bizUserSetPasswordVo.getPassword())){
+            return Result.failed("密码不能为空");
         }
 //        String password = "";
         String password = passwordEncoder.encode(bizUserSetPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
