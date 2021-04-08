@@ -217,11 +217,11 @@ public class AuthController {
         }else if(type.contentEquals("validCode")){
             String code = parameters.get("code");
             if (StrUtil.isBlank(code)) {
-                throw new BizException("code不能为空");
+                throw new BizException("验证码不能为空");
             }
             boolean hasValidCode = redisTemplate.hasKey(username+"_" +AuthConstants.SMS_VALID_CODE);
             if(!hasValidCode){
-                throw new BizException("验证码不能为空");
+                throw new BizException("无效验证码，请重新获取");
             }
             String validCode = redisTemplate.opsForValue().get(username+"_" +AuthConstants.SMS_VALID_CODE).toString();
             if(!validCode.equals(code)){

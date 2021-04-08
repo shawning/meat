@@ -199,7 +199,7 @@ public class BizUser implements Serializable {
     @TableField("PASS_INFO")
     private String passInfo;
     @ApiModelProperty(value = "数据有效性", example = "1")
-    @TableLogic
+//    @TableLogic
     @TableField("IS_AVAILABLE")
     private Integer isAvailable = 1;
 

@@ -249,13 +249,17 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result forgotPwd(BizUserForgotPasswordVo bizUserForgotPasswordVo) {
         if(bizUserForgotPasswordVo == null){
             return Result.failed(PARAM_IS_NULL);
         }
+        if(StrUtil.isBlank(bizUserForgotPasswordVo.getValidCode())){
+            return Result.failed("验证码不能为空");
+        }
         boolean hasValidCode = redisTemplate.hasKey(bizUserForgotPasswordVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE);
         if(!hasValidCode){
-            throw new BizException("验证码不能为空");
+            throw new BizException("无效验证码，请重新获取");
         }
         String validCode = redisTemplate.opsForValue().get(bizUserForgotPasswordVo.getPhone()+"_" +AuthConstants.SMS_VALID_CODE).toString();
         if(!validCode.equals(bizUserForgotPasswordVo.getValidCode())){
@@ -268,6 +272,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         String password = passwordEncoder.encode(bizUserForgotPasswordVo.getPassword()).replace(AuthConstants.BCRYPT, Strings.EMPTY);
         bizUser.setPassword(password);
         bizUser.setPassInfo(bizUserForgotPasswordVo.getPassword());
+        bizUser.setIsAvailable(1);
+        int a = bizUserMapper.updateById(bizUser);
         return Result.judge(bizUserMapper.updateById(bizUser));
     }
 }
