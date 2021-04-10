@@ -20,6 +20,8 @@ import com.meet.app.vo.BizUserForgotPasswordVo;
 import com.meet.app.vo.BizUserLoginPasswordVo;
 import com.meet.app.vo.BizUserLoginValidCodeVo;
 import com.meet.app.vo.BizUserSetPasswordVo;
+import com.meet.sms.service.SmsService;
+import com.meet.sms.utils.SmsUtils;
 import com.youlai.common.constant.AuthConstants;
 import com.youlai.common.result.Result;
 import com.youlai.common.result.ResultCode;
@@ -53,6 +55,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
     private BizUserMapper bizUserMapper;
 //    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private SmsService smsService;
 
     @Override
     public Result getBizUser(Long id) {
@@ -183,9 +187,10 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         if(hasValidCode){
             validCode = redisTemplate.opsForValue().get(phone+"_" +AuthConstants.SMS_VALID_CODE).toString();
         }else {
-            validCode = "8888";
-//            validCode = RegexUtils.getFourRandom();
+//            validCode = "8888";
+            validCode = RegexUtils.getFourRandom();
         }
+        smsService.sendLoginSms(phone,validCode);
         redisTemplate.opsForValue().set(phone + "_" + AuthConstants.SMS_VALID_CODE, validCode, 10 * 60, TimeUnit.SECONDS);
         return Result.success(ValidCodeDto.builder().validCode(validCode).build());
     }

@@ -41,6 +41,17 @@
             <artifactId>common-redis</artifactId>
             <version>${youlai.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-sms</artifactId>
+            <version>${youlai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-rabbitmq</artifactId>
+            <version>${youlai.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
