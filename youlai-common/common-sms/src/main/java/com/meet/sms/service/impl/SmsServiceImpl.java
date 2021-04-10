@@ -22,13 +22,18 @@ public class SmsServiceImpl implements SmsService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public  boolean sendLoginSms(String phone, String validCode){
-        log.info("==============短信发送至："+phone+" 内容为:"+validCode);
-        Map<String ,String > map = new HashMap<>();
-        map.put("templateCode", SmsEnum.LOGIN_CONFIRM.getCode());
-        map.put("mobile",phone);
-        map.put("checkcode",validCode);
-        rabbitTemplate.convertAndSend(RabbitConstants.SMS_RELEASE_QUEUE,map);
-        return false;
+    public  boolean sendLoginSms(String phone, String validCode) {
+        try {
+            log.info("==============短信发送至：" + phone + " 内容为:" + validCode);
+            Map<String, String> map = new HashMap<>();
+            map.put("templateCode", SmsEnum.LOGIN_CONFIRM.getCode());
+            map.put("mobile", phone);
+            map.put("checkcode", validCode);
+            rabbitTemplate.convertAndSend(RabbitConstants.SMS_RELEASE_QUEUE, map);
+            return true;
+        } catch (Exception e) {
+            log.error("===发送短信是失败====",e);
+            return false;
+        }
     }
 }
