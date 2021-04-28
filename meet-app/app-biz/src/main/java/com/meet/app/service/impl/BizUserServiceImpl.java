@@ -16,6 +16,7 @@ import com.meet.app.mapper.BizUserBlacklistMapper;
 import com.meet.app.mapper.BizUserFriendsMapper;
 import com.meet.app.mapper.BizUserMapper;
 import com.meet.app.service.BizUserService;
+import com.meet.app.service.im.IMUserService;
 import com.meet.app.vo.BizUserForgotPasswordVo;
 import com.meet.app.vo.BizUserLoginPasswordVo;
 import com.meet.app.vo.BizUserLoginValidCodeVo;
@@ -57,6 +58,8 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
     private PasswordEncoder passwordEncoder;
     @Autowired
     private SmsService smsService;
+    @Autowired
+    private IMUserService imUserService;
 
     @Override
     public Result getBizUser(Long id) {
@@ -92,7 +95,11 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         bizUser.setCreateDate(new Date(System.currentTimeMillis()));
         bizUser.setIsAvailable(1);
         bizUser.setPassInfo(bizUser.getPhone());
-        return Result.success(this.save(bizUser));
+        if(this.save(bizUser)){
+            //IM增加用户
+            imUserService.create(bizUser.getId().toString(), bizUser.getPassword());
+        }
+        return Result.success();
     }
 
     @Override
@@ -250,7 +257,11 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         BizUser  bizUser = bizUserMapper.getBizUserByPhone(bizUserSetPasswordVo.getPhone());
         bizUser.setPassword(password);
         bizUser.setPassInfo(bizUserSetPasswordVo.getPassword());
-        return Result.judge(bizUserMapper.updateById(bizUser));
+        if(bizUserMapper.updateById(bizUser) > 0){
+            //IM修改密码
+            imUserService.updateUserPassword(bizUser.getId().toString(), bizUser.getPassword());
+        }
+        return Result.success();
     }
 
     @Override
@@ -279,6 +290,10 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         bizUser.setPassInfo(bizUserForgotPasswordVo.getPassword());
         bizUser.setIsAvailable(1);
         int a = bizUserMapper.updateById(bizUser);
-        return Result.judge(bizUserMapper.updateById(bizUser));
+        if(bizUserMapper.updateById(bizUser) > 0){
+            //IM修改密码
+            imUserService.updateUserPassword(bizUser.getId().toString(), bizUser.getPassword());
+        }
+        return Result.success();
     }
 }

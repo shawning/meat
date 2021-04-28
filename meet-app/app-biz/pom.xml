@@ -13,6 +13,8 @@
 
     <properties>
         <youlai.version>1.0.0</youlai.version>
+        <netty.version>4.1.59.Final</netty.version>
+        <reactor-bom.version>2020.0.4</reactor-bom.version>
     </properties>
     <dependencies>
 
@@ -82,6 +84,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- 环信Chat -->
+        <dependency>
+            <groupId>com.easemob.im</groupId>
+            <artifactId>im-sdk-core</artifactId>
+            <version>0.2.5</version>
         </dependency>
     </dependencies>
 

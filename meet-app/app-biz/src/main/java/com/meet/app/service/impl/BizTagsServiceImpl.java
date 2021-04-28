@@ -8,9 +8,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.easemob.im.server.model.EMUser;
 import com.meet.app.mapper.BizTagsMapper;
 import com.meet.app.entity.BizTags;
 import com.meet.app.service.BizTagsService;
+import com.meet.app.service.im.IM;
 import com.meet.app.vo.BizTagsVo;
 import com.youlai.common.result.Result;
 import com.youlai.common.web.util.RequestUtils;
@@ -20,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -106,6 +111,9 @@ public class BizTagsServiceImpl extends ServiceImpl<BizTagsMapper, BizTags> impl
 
     @Override
     public Result detail(@NonNull Long id){
+//        Void a1 = IM.server().user().create("xiao","12345").block();
+        EMUser a = IM.server().user().get("xiao").block();
+    String name = a.getUsername();
         QueryWrapper<BizTags> query = new QueryWrapper<>();
         query.eq("ID", id);
         query().eq("IS_AVLIABLE",1);
