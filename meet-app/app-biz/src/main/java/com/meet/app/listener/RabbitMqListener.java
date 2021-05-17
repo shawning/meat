@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class RabbitMqListener {
+    @Value("${ali.sms.AccessKeyId}")
+    private String accessKeyId;
+    @Value("${ali.sms.AccessKeySecret}")
+    private String accessKeySecret;
+
     @RabbitListener(queues = RabbitConstants.SMS_RELEASE_QUEUE)
     @RabbitHandler
     public void eventDirectSmsPush(Message message) throws Exception {
@@ -56,9 +62,9 @@ public class RabbitMqListener {
     public  com.aliyun.dysmsapi20170525.Client createClient() throws Exception {
         Config config = new Config()
                 // 您的AccessKey ID
-                .setAccessKeyId("LTAI5t7xVbtF67fi4Nr2QHXq")
+                .setAccessKeyId(accessKeyId)
                 // 您的AccessKey Secret
-                .setAccessKeySecret("IPaRHccXM1ccv6K5iWL5P75ow77KiE");
+                .setAccessKeySecret(accessKeySecret);
         // 访问的域名
         config.endpoint = "dysmsapi.aliyuncs.com";
         return new com.aliyun.dysmsapi20170525.Client(config);
