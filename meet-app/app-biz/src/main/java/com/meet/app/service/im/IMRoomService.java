@@ -29,7 +29,7 @@ public interface IMRoomService {
      * @param maxMembers
      * @return
      */
-    Result createRoom(String name, String description, String owner, List<String> members, int maxMembers);
+    String createRoom(String name, String description, String owner, List<String> members, int maxMembers);
 
     /**
      * 降级聊天室管理员至成员
@@ -81,7 +81,7 @@ public interface IMRoomService {
      * @param roomId
      * @return
      */
-    Result listRoomMembersAll(String roomId);
+    List<String> listRoomMembersAll(String roomId);
 
     /**
      * 分页获取聊天室列表

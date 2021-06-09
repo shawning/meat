@@ -1,6 +1,5 @@
 package com.meet.app.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -8,7 +7,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import com.easemob.im.server.EMService;
 import com.meet.app.mapper.BizGiftsMapper;
 import com.meet.app.entity.BizGifts;
 import com.meet.app.service.BizGiftsService;
@@ -17,7 +15,6 @@ import com.youlai.common.result.Result;
 import com.youlai.common.web.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +34,6 @@ import java.util.Date;
 @Slf4j
 @Service
 public class BizGiftsServiceImpl extends ServiceImpl<BizGiftsMapper, BizGifts> implements BizGiftsService {
-
 
 
     @Override

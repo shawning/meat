@@ -28,5 +28,14 @@ public interface IMMessageService {
      */
     Result sendToChatRoom(String from,String roomId,String message);
 
+    /**
+     * 群组聊天
+     * @param from
+     * @param groupId
+     * @param message
+     * @return
+     */
+    Result sendToGroup(String from,String groupId,String message);
+
     Result getHistoryMessage(Instant instant);
 }

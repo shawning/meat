@@ -9,6 +9,7 @@ import com.easemob.im.server.model.EMSentMessageIds;
 import com.easemob.im.server.model.EMTextMessage;
 import com.meet.app.service.im.IM;
 import com.meet.app.service.im.IMMessageService;
+import com.meet.hbase.dto.SingleMessageDto;
 import com.youlai.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,6 +54,16 @@ public class IMMessageServiceImpl implements IMMessageService {
         EMTextMessage message1 = new EMTextMessage();
         message1.text(message);
         EMSentMessageIds emSentMessageIds = emService.message().send(from,"chatrooms",tos,message1,null).block();
+        return Result.success(emSentMessageIds);
+    }
+
+    @Override
+    public Result sendToGroup(String from, String groupId, String message) {
+        Set<String> tos = new HashSet<>();
+        tos.add(groupId);
+        EMTextMessage message1 = new EMTextMessage();
+        message1.text(message);
+        EMSentMessageIds emSentMessageIds = emService.message().send(from,"chatgroups",tos,message1,null).block();
         return Result.success(emSentMessageIds);
     }
 

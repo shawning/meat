@@ -5,6 +5,8 @@ import com.easemob.im.server.api.room.update.UpdateRoomRequest;
 import com.meet.app.service.im.IM;
 import com.meet.app.service.im.IMRoomService;
 import com.youlai.common.result.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,6 +16,8 @@ import java.util.function.Consumer;
  * @Date: 2021/4/24 下午10:18
  * @Description
  */
+@Slf4j
+@Service
 public class IMRoomServiceImpl implements IMRoomService {
     private EMService emService = IM.server();
     @Override
@@ -22,8 +26,8 @@ public class IMRoomServiceImpl implements IMRoomService {
     }
 
     @Override
-    public Result createRoom(String name, String description, String owner, List<String> members, int maxMembers) {
-        return Result.success(emService.room().createRoom(name, description, owner, members, maxMembers));
+    public String createRoom(String name, String description, String owner, List<String> members, int maxMembers) {
+        return emService.room().createRoom(name, description, owner, members, maxMembers).block();
     }
 
     @Override
@@ -57,8 +61,8 @@ public class IMRoomServiceImpl implements IMRoomService {
     }
 
     @Override
-    public Result listRoomMembersAll(String roomId) {
-        return Result.success(emService.room().listRoomAdminsAll(roomId));
+    public List<String> listRoomMembersAll(String roomId) {
+        return emService.room().listRoomAdminsAll(roomId).collectList().block();
     }
 
     @Override

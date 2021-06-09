@@ -15,6 +15,7 @@
         <youlai.version>1.0.0</youlai.version>
         <netty.version>4.1.59.Final</netty.version>
         <reactor-bom.version>2020.0.4</reactor-bom.version>
+        <hbase-spring-boot>1.0.0.RELEASE</hbase-spring-boot>
     </properties>
     <dependencies>
 
@@ -53,6 +54,22 @@
             <artifactId>common-rabbitmq</artifactId>
             <version>${youlai.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.youlai</groupId>
+            <artifactId>common-hbase</artifactId>
+            <version>${youlai.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>protobuf-java</artifactId>
+                    <groupId>com.google.protobuf</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.5.0</version>
+        </dependency>
 
 
         <dependency>
@@ -90,6 +107,16 @@
             <groupId>com.easemob.im</groupId>
             <artifactId>im-sdk-core</artifactId>
             <version>0.2.5</version>
+        </dependency>
+        <!-- 阿里视频直播 -->
+        <!--<dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>tea-openapi</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>live20161101</artifactId>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 

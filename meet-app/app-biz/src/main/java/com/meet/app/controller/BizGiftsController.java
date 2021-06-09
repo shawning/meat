@@ -50,7 +50,7 @@ public class BizGiftsController {
     }
 
 
-    @ApiIgnore
+//    @ApiIgnore
     @ApiOperation(notes = "礼物详情",
                 httpMethod = HttpMethod.GET,
                 response = Result.class,

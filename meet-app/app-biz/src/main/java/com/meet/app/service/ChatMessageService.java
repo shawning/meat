@@ -14,5 +14,6 @@ import java.time.Instant;
 public interface ChatMessageService {
     Result chatToSingleUser(ChatSingleMessageVo chatSingleMessageVo);
     Result chatToRoom(ChatRoomMessageVo chatRoomMessageVo);
-    Result messageList(String day);
+    Result singleMessageList(String sendTo,String day);
+    Result roomMessageList(String roomId,String day);
 }

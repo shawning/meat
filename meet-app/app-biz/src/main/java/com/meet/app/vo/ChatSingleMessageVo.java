@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @ApiModel(description = "单用户聊天")
 public class ChatSingleMessageVo {
     @ApiModelProperty(value = "对方用户id", example = "0", required = true)
-    private String username;
+    private String sendTo;
     @ApiModelProperty(value = "消息内容", example = "0", required = true)
     private String message;
 }
