@@ -1,6 +1,7 @@
 package com.meet.app.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -8,11 +9,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easemob.im.server.api.room.update.UpdateRoomRequest;
+import com.meet.app.dto.LivePushPullUrlDto;
 import com.meet.app.mapper.BizRoomMapper;
 import com.meet.app.entity.BizRoom;
 import com.meet.app.service.BizRoomService;
 import com.meet.app.service.im.IMRoomService;
 import com.meet.app.service.im.ImChatService;
+import com.meet.app.service.live.LiveService;
 import com.meet.app.vo.BizRoomVo;
 import com.youlai.common.result.Result;
 import com.youlai.common.web.util.RequestUtils;
@@ -45,6 +48,8 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
 
     @Autowired
     private IMRoomService imRoomService;
+    @Autowired
+    private LiveService liveService;
 
     @Override
     public Result list(BizRoomVo bizRoomVo) {
@@ -134,16 +139,29 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
 
     @Override
     public Result start() {
+//        long userId = 105;
+//        String username = "xiao";
         if (RequestUtils.getUserId() == null){
             return Result.failed(PARAM_ERROR);
         }
         LambdaQueryWrapper<BizRoom> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(BizRoom::getOwnerId, RequestUtils.getUserId());
+//        queryWrapper.eq(BizRoom::getOwnerId, userId);
         BizRoom bizRoom = this.getOne(queryWrapper);
         /**
          * 开始直播，如果没有直播房间，则创建一个
          */
         if(bizRoom == null){
+            bizRoom = new BizRoom();
+            LivePushPullUrlDto dto = liveService.createLivePushUrl(RequestUtils.getUserId().toString());
+//            LivePushPullUrlDto dto = liveService.createLivePushUrl(userId+"");
+            bizRoom.setPushUrl(dto.getPushUrl());
+            bizRoom.setPullUrl(dto.getPullUrl());
+//            bizRoom.setOwnerId(userId);
+//            bizRoom.setOwnerName(username);
+//            bizRoom.setRoomName(username+"的直播间");
+//            bizRoom.setCreateBy(userId);
+//            bizRoom.setCreateByName(username);
             bizRoom.setOwnerId(RequestUtils.getUserId());
             bizRoom.setOwnerName(RequestUtils.getUsername());
             bizRoom.setRoomName(RequestUtils.getUsername()+"的直播间");
@@ -153,11 +171,11 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
             bizRoom.setOnline(1);//直播中
             List<String> members = new ArrayList<String>();
             members.add(bizRoom.getOwnerId()+"");
-            String roomId = imRoomService.createRoom(bizRoom.getRoomName(), bizRoom.getRoomName(), bizRoom.getOwnerId().toString(),members,1000);
+            /*String roomId = imRoomService.createRoom(bizRoom.getRoomName(), bizRoom.getRoomName(), bizRoom.getOwnerId().toString(),members,1000);
             if(StrUtil.isNotEmpty(roomId)){
                 bizRoom.setRoomId(roomId);
-                baseMapper.insert(bizRoom);
-            }
+            }*/
+            baseMapper.insert(bizRoom);
         }else{
             bizRoom.setOnline(1);//直播中
             baseMapper.updateById(bizRoom);

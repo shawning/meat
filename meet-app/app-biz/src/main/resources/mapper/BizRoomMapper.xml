@@ -13,6 +13,8 @@
     <result column="IS_AVAILABLE" jdbcType="INTEGER" property="isAvailable"/>
     <result column="ONLINE" jdbcType="INTEGER" property="online"/>
     <result column="ROOM_ID" jdbcType="VARCHAR" property="roomId"/>
+    <result column="PUSH_URL" jdbcType="VARCHAR" property="pushUrl"/>
+    <result column="PULL_URL" jdbcType="VARCHAR" property="pullUrl"/>
   </resultMap>
   <!-- 以下是自查询定义方法 -->
 

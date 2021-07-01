@@ -43,7 +43,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public Result chatToSingleUser(ChatSingleMessageVo chatSingleMessageVo) {
-        String from,fromName = "",toName;
+        String from,toName;
+        String fromName="";
         if(chatSingleMessageVo == null){
             return Result.failed("单聊数据不能为空");
         }
@@ -57,14 +58,15 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         toName = bizUser.getName();
         Result<EMSentMessageIds> result = imMessageService.sendToUser(from, chatSingleMessageVo.getSendTo(), chatSingleMessageVo.getMessage());
         String messageId = result.getData().getMessageIdsByEntityId().get(chatSingleMessageVo.getSendTo());
-        ihBaseService.saveSingleChatMessage(SingleMessageDto.builder().messageId(messageId)
+        SingleMessageDto dto = SingleMessageDto.builder().messageId(messageId)
                 .sendFrom(from)
                 .sendFromName(fromName)
                 .sendTo(chatSingleMessageVo.getSendTo())
                 .sendToName(toName)
                 .message(chatSingleMessageVo.getMessage())
                 .date(new Date(System.currentTimeMillis()))
-                .build());
+                .build();
+        ihBaseService.saveSingleChatMessage(dto);
         return result;
     }
 

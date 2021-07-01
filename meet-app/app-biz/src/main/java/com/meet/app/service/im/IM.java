@@ -3,6 +3,8 @@ package com.meet.app.service.im;
 import com.easemob.im.server.EMProperties;
 import com.easemob.im.server.EMService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
@@ -11,7 +13,9 @@ import java.util.Map;
  * @Date: 2021/4/23 下午10:43
  * @Description
  */
+@Configuration
 public class IM {
+    @Value("${zookeeper.znode.parent}")
     public static final String NAME = "";
     private static EMService emService = null;
     static {

@@ -83,4 +83,11 @@ public class BizRoom implements Serializable {
     @TableField("ROOM_TYPE")
     private Integer roomType;
 
+    @ApiModelProperty(value = "推流/直播流（主播）", example = "rtmp://push.meet-ys.com/meet/102?auth_key=1625138758-0-0-3a087349a85924c14868deec55f2aa4b")
+    @TableField("PUSH_URL")
+    private String pushUrl;
+
+    @ApiModelProperty(value = "拉流/播放流（粉丝）", example = "rtmp://live.meet-ys.com/meet/102?auth_key=1625138758-0-0-3a4a4cd37805fd334cd548ff3b957340")
+    @TableField("PULL_URL")
+    private String pullUrl;
 }
