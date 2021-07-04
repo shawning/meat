@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easemob.im.server.api.room.update.UpdateRoomRequest;
+import com.meet.app.dto.BizRoomDto;
 import com.meet.app.dto.LivePushPullUrlDto;
 import com.meet.app.mapper.BizRoomMapper;
 import com.meet.app.entity.BizRoom;
@@ -21,6 +22,7 @@ import com.youlai.common.result.Result;
 import com.youlai.common.web.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -148,6 +150,7 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
         queryWrapper.eq(BizRoom::getOwnerId, RequestUtils.getUserId());
 //        queryWrapper.eq(BizRoom::getOwnerId, userId);
         BizRoom bizRoom = this.getOne(queryWrapper);
+        BizRoomDto roomDto = new BizRoomDto();
         /**
          * 开始直播，如果没有直播房间，则创建一个
          */
@@ -181,7 +184,9 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
             baseMapper.updateById(bizRoom);
         }
         List<String> members = new ArrayList<String>();
-        return Result.success(bizRoom);
+        BeanUtils.copyProperties(bizRoom,roomDto);
+        roomDto.setPullUrl(new JSONObject(bizRoom.getPullUrl()));
+        return Result.success(roomDto);
     }
 
     @Override
