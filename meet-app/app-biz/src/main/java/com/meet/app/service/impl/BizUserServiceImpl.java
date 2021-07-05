@@ -97,7 +97,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         bizUser.setPassInfo(bizUser.getPhone());
         if(this.save(bizUser)){
             //IM增加用户
-            imUserService.create(bizUser.getId().toString(), bizUser.getPassword());
+            imUserService.create(bizUser.getId().toString(), bizUser.getPassInfo());
         }
         return Result.success();
     }
@@ -259,7 +259,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         bizUser.setPassInfo(bizUserSetPasswordVo.getPassword());
         if(bizUserMapper.updateById(bizUser) > 0){
             //IM修改密码
-            imUserService.updateUserPassword(bizUser.getId().toString(), bizUser.getPassword());
+            imUserService.updateUserPassword(bizUser.getId().toString(), bizUser.getPassInfo());
         }
         return Result.success();
     }
@@ -292,7 +292,7 @@ public class BizUserServiceImpl extends ServiceImpl<BizUserMapper, BizUser> impl
         int a = bizUserMapper.updateById(bizUser);
         if(bizUserMapper.updateById(bizUser) > 0){
             //IM修改密码
-            imUserService.updateUserPassword(bizUser.getId().toString(), bizUser.getPassword());
+            imUserService.updateUserPassword(bizUser.getId().toString(), bizUser.getPassInfo());
         }
         return Result.success();
     }

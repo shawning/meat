@@ -25,7 +25,7 @@ import java.time.Instant;
 @Slf4j
 @RestController
 @RequestMapping("/api.app/v1/chatMessage")
-@Api(value = "/api.app/v1/chatMessage", tags = {"单聊/群聊消息 API"}, description = "单聊/群聊-消息 API")
+@Api(value = "/api.app/v1/chatMessage", tags = {"单聊|群聊消息 API"}, description = "单聊|群聊-消息 API")
 public class ChatMessageController {
 
     @Autowired

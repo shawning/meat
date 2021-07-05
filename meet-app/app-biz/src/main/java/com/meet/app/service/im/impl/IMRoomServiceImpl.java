@@ -22,22 +22,22 @@ public class IMRoomServiceImpl implements IMRoomService {
     private EMService emService = IM.server();
     @Override
     public Result addRoomMember(String roomId, String username) {
-        return Result.success(emService.room().addRoomMember(roomId, username));
+        return Result.success(emService.room().addRoomMember(roomId, "meet"+username));
     }
 
     @Override
     public String createRoom(String name, String description, String owner, List<String> members, int maxMembers) {
-        return emService.room().createRoom(name, description, owner, members, maxMembers).block();
+        return emService.room().createRoom(name, description, "meet"+owner, members, maxMembers).block();
     }
 
     @Override
     public Result demoteRoomAdmin(String roomId, String username) {
-        return Result.success(emService.room().demoteRoomAdmin(roomId, username));
+        return Result.success(emService.room().demoteRoomAdmin(roomId, "meet"+username));
     }
 
     @Override
     public Result demoteRoomSuperAdmin(String username) {
-        return Result.success(emService.room().demoteRoomSuperAdmin(username));
+        return Result.success(emService.room().demoteRoomSuperAdmin("meet"+username));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class IMRoomServiceImpl implements IMRoomService {
 
     @Override
     public Result listRoomsUserJoined(String username) {
-        return Result.success(emService.room().listRoomsUserJoined(username));
+        return Result.success(emService.room().listRoomsUserJoined("meet"+username));
     }
 
     @Override

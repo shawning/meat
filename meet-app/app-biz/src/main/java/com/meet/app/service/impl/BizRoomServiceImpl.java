@@ -167,17 +167,17 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
 //            bizRoom.setCreateByName(username);
             bizRoom.setOwnerId(RequestUtils.getUserId());
             bizRoom.setOwnerName(RequestUtils.getUsername());
-            bizRoom.setRoomName(RequestUtils.getUsername()+"的直播间");
+            bizRoom.setRoomName(StringUtils.isNotEmpty(RequestUtils.getUsername())?RequestUtils.getUsername():("meet用户"+RequestUtils.getUserId())+"的直播间");
             bizRoom.setCreateBy(RequestUtils.getUserId());
             bizRoom.setCreateByName(RequestUtils.getUsername());
             bizRoom.setIsAvailable(1);
             bizRoom.setOnline(1);//直播中
             List<String> members = new ArrayList<String>();
-            members.add(bizRoom.getOwnerId()+"");
-            /*String roomId = imRoomService.createRoom(bizRoom.getRoomName(), bizRoom.getRoomName(), bizRoom.getOwnerId().toString(),members,1000);
+            members.add("meet"+bizRoom.getOwnerId()+"");
+            String roomId = imRoomService.createRoom(bizRoom.getRoomName(), bizRoom.getRoomName(), bizRoom.getOwnerId().toString(),members,1000);
             if(StrUtil.isNotEmpty(roomId)){
                 bizRoom.setRoomId(roomId);
-            }*/
+            }
             baseMapper.insert(bizRoom);
         }else{
             bizRoom.setOnline(1);//直播中
