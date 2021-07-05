@@ -1,6 +1,7 @@
 package com.meet.app.service.live;
 
 import com.aliyun.teaopenapi.models.Config;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @Author: 肖宁 xiaoning@visionet.com.cn
@@ -9,6 +10,13 @@ import com.aliyun.teaopenapi.models.Config;
  */
 public class Live {
     public static final String NAME = "";
+    @Value("${ali.live.url}")
+    public static String URL ;
+    @Value("${ali.sms.AccessKeyId}")
+    public static String ACCESSKEY ;
+    @Value("${ali.sms.AccessKeySecret}")
+    public static String SECRET ;
+
     private static com.aliyun.live20161101.Client client = null;
     static {
         init();
@@ -26,11 +34,11 @@ public class Live {
         try {
             Config config = new Config()
                     // 您的AccessKey ID
-                    .setAccessKeyId("LTAI5t7xVbtF67fi4Nr2QHXq")
+                    .setAccessKeyId(ACCESSKEY)
                     // 您的AccessKey Secret
-                    .setAccessKeySecret("IPaRHccXM1ccv6K5iWL5P75ow77KiE");
+                    .setAccessKeySecret(SECRET);
             // 访问的域名
-            config.endpoint = "live.aliyuncs.com";
+            config.endpoint = URL;
             client =  new com.aliyun.live20161101.Client(config);
         } catch (Exception e) {
             e.printStackTrace();

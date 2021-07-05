@@ -15,8 +15,12 @@ import java.util.Map;
  */
 @Configuration
 public class IM {
-    @Value("${zookeeper.znode.parent}")
-    public static final String NAME = "";
+    @Value("${easemob.chat.appKey}")
+    public static String APP_KEY ;
+    @Value("${easemob.chat.clientId}")
+    public static String CLIENT_ID;
+    @Value("${easemob.chat.secret}")
+    public static String SECRET;
     private static EMService emService = null;
     static {
         init();
@@ -33,9 +37,9 @@ public class IM {
     public static void init(){
         try {
             EMProperties properties = EMProperties.builder()
-                    .setAppkey("1120210329085358#meet")
-                    .setClientId("YXA6ZRk9u4jqR2e1Gi_Dqrr2Vg")
-                    .setClientSecret("YXA6oGWGGHN7HG4uHGz4eKv0vUawvk4")
+                    .setAppkey(APP_KEY)
+                    .setClientId(CLIENT_ID)
+                    .setClientSecret(SECRET)
                     .build();
             emService = new EMService(properties);
         } catch (Exception e) {
