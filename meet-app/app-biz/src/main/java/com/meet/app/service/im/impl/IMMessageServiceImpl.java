@@ -29,10 +29,10 @@ import java.util.Set;
 @Slf4j
 @Service
 public class IMMessageServiceImpl implements IMMessageService {
-    private EMService emService = IM.server();
+//    private EMService IM.emService = IM.server();
     @Override
     public Result sendToUser(String from, String to, String message) {
-        /*emService.message().send()
+        /*IM.emService.message().send()
                 .fromUser(from).toUser(to)
                 .text(msg -> msg.text("message"))
                 .extension(exts -> exts.add(EMKeyValue.of("timeout", 1)))
@@ -43,7 +43,7 @@ public class IMMessageServiceImpl implements IMMessageService {
         tos.add(to);
         EMTextMessage message1 = new EMTextMessage();
         message1.text(message);
-        EMSentMessageIds emSentMessageIds = emService.message().send(from,"users",tos,message1,null).block();
+        EMSentMessageIds emSentMessageIds = IM.emService.message().send(from,"users",tos,message1,null).block();
         return Result.success(emSentMessageIds);
     }
 
@@ -53,7 +53,7 @@ public class IMMessageServiceImpl implements IMMessageService {
         tos.add(roomId);
         EMTextMessage message1 = new EMTextMessage();
         message1.text(message);
-        EMSentMessageIds emSentMessageIds = emService.message().send(from,"chatrooms",tos,message1,null).block();
+        EMSentMessageIds emSentMessageIds = IM.emService.message().send(from,"chatrooms",tos,message1,null).block();
         return Result.success(emSentMessageIds);
     }
 
@@ -63,7 +63,7 @@ public class IMMessageServiceImpl implements IMMessageService {
         tos.add(groupId);
         EMTextMessage message1 = new EMTextMessage();
         message1.text(message);
-        EMSentMessageIds emSentMessageIds = emService.message().send(from,"chatgroups",tos,message1,null).block();
+        EMSentMessageIds emSentMessageIds = IM.emService.message().send(from,"chatgroups",tos,message1,null).block();
         return Result.success(emSentMessageIds);
     }
 
@@ -72,11 +72,11 @@ public class IMMessageServiceImpl implements IMMessageService {
         if(instant == null){
             return Result.success();
         }
-        String filePath = emService.message().getHistoryAsUri(instant).block();
+        String filePath = IM.emService.message().getHistoryAsUri(instant).block();
         if(StrUtil.isEmpty(filePath)){
             return Result.success();
         }
-//        String path = emService.message().getHistoryAsLocalFile()
+//        String path = IM.emService.message().getHistoryAsLocalFile()
         return Result.success(filePath);
     }
 }

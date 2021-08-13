@@ -21,109 +21,109 @@ import java.util.function.Consumer;
 @Slf4j
 @Service
 public class IMGroupServiceImpl implements IMGroupService {
-    private EMService emService = IM.server();
+//    private EMService IM.emService = IM.server();
     @Override
     public String createPrivateGroup(String owner, String groupName, String description, List<String> members, int maxMembers, boolean canMemberInvite) {
-        return emService.group().createPrivateGroup(owner,groupName,description,members,maxMembers,canMemberInvite).block();
+        return IM.emService.group().createPrivateGroup(owner,groupName,description,members,maxMembers,canMemberInvite).block();
     }
 
     @Override
     public String createPublicGroup(String owner, String groupName, String description, List<String> members, int maxMembers, boolean needApproveToJoin) {
-        return emService.group().createPublicGroup(owner, groupName, description, members, maxMembers, needApproveToJoin).block();
+        return IM.emService.group().createPublicGroup(owner, groupName, description, members, maxMembers, needApproveToJoin).block();
     }
 
     @Override
     public void destroyGroup(String groupId) {
-        emService.group().destroyGroup(groupId).block();
+        IM.emService.group().destroyGroup(groupId).block();
     }
 
     @Override
     public EMGroup getGroup(String groupId) {
-        return emService.group().getGroup(groupId).block();
+        return IM.emService.group().getGroup(groupId).block();
     }
 
     @Override
     public String getGroupAnnouncement(String groupId) {
-        return emService.group().getGroupAnnouncement(groupId).block();
+        return IM.emService.group().getGroupAnnouncement(groupId).block();
     }
 
     @Override
     public List<String> listAllGroupMembers(String groupId) {
-        return emService.group().listAllGroupMembers(groupId).collectList().block();
+        return IM.emService.group().listAllGroupMembers(groupId).collectList().block();
     }
 
     @Override
     public List<String> listAllGroups() {
-        return emService.group().listAllGroups().collectList().block();
+        return IM.emService.group().listAllGroups().collectList().block();
     }
 
     @Override
     public List<String> listGroupAdmins(String groupId) {
-        return emService.group().listGroupAdmins(groupId).collectList().block();
+        return IM.emService.group().listGroupAdmins(groupId).collectList().block();
     }
 
     @Override
     public List<String> listGroupsUserJoined(String username) {
-        return emService.group().listGroupsUserJoined(username).collectList().block();
+        return IM.emService.group().listGroupsUserJoined(username).collectList().block();
     }
 
     @Override
     public void removeGroupAdmin(String groupId, String username) {
-        emService.group().removeGroupAdmin(groupId, username).block();
+        IM.emService.group().removeGroupAdmin(groupId, username).block();
     }
 
     @Override
     public void removeGroupMember(String groupId, String username) {
-        emService.group().removeGroupMember(groupId, username).block();
+        IM.emService.group().removeGroupMember(groupId, username).block();
     }
 
     @Override
     public void updateGroup(String groupId, Consumer<UpdateGroupRequest> customizer) {
-        emService.group().updateGroup(groupId, customizer).block();
+        IM.emService.group().updateGroup(groupId, customizer).block();
     }
 
     @Override
     public void updateGroupAnnouncement(String groupId, String announcement) {
-        emService.group().updateGroupAnnouncement(groupId, announcement).block();
+        IM.emService.group().updateGroupAnnouncement(groupId, announcement).block();
     }
 
     @Override
     public void updateGroupOwner(String groupId, String username) {
-        emService.group().updateGroupOwner(groupId, username).block();
+        IM.emService.group().updateGroupOwner(groupId, username).block();
     }
 
     @Override
     public void addGroupMember(String groupId, String username) {
-        emService.group().addGroupMember(groupId, username).block();
+        IM.emService.group().addGroupMember(groupId, username).block();
     }
 
     @Override
     public void addGroupAdmin(String groupId, String username) {
-        emService.group().addGroupAdmin(groupId, username).block();
+        IM.emService.group().addGroupAdmin(groupId, username).block();
     }
 
     @Override
     public void blockUserJoinGroup(String username, String groupId) {
-        emService.block().blockUserJoinGroup(username, groupId).block();
+        IM.emService.block().blockUserJoinGroup(username, groupId).block();
     }
 
     @Override
     public void blockUserSendMsgToGroup(String username, String groupId, Duration duration) {
-        emService.block().blockUserSendMsgToGroup(username, groupId, duration).block();
+        IM.emService.block().blockUserSendMsgToGroup(username, groupId, duration).block();
     }
 
     @Override
     public List<EMBlock> getUsersBlockedSendMsgToGroup(String groupId) {
-        return emService.block().getUsersBlockedSendMsgToGroup(groupId).collectList().block();
+        return IM.emService.block().getUsersBlockedSendMsgToGroup(groupId).collectList().block();
     }
 
     @Override
     public void unblockUserJoinGroup(String username, String groupId) {
-        emService.block().unblockUserJoinGroup(username, groupId).block();
+        IM.emService.block().unblockUserJoinGroup(username, groupId).block();
     }
 
     @Override
     public void unblockUserSendMsgToGroup(String username, String groupId) {
-        emService.block().unblockUserSendMsgToUser(username, groupId).block();
+        IM.emService.block().unblockUserSendMsgToUser(username, groupId).block();
     }
 }

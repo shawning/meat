@@ -8,12 +8,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.easemob.im.server.EMService;
 import com.easemob.im.server.api.room.update.UpdateRoomRequest;
 import com.meet.app.dto.BizRoomDto;
 import com.meet.app.dto.LivePushPullUrlDto;
 import com.meet.app.mapper.BizRoomMapper;
 import com.meet.app.entity.BizRoom;
 import com.meet.app.service.BizRoomService;
+import com.meet.app.service.im.IM;
 import com.meet.app.service.im.IMRoomService;
 import com.meet.app.service.im.ImChatService;
 import com.meet.app.service.live.LiveService;
@@ -143,6 +145,9 @@ public class BizRoomServiceImpl extends ServiceImpl<BizRoomMapper, BizRoom> impl
     public Result start() {
 //        long userId = 105;
 //        String username = "xiao";
+        String aa = IM.APP_KEY;
+        EMService ser = IM.emService;
+       imRoomService.createRoom("xiao", "xiao", "xiao",null,1000);
         if (RequestUtils.getUserId() == null){
             return Result.failed(PARAM_ERROR);
         }

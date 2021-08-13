@@ -19,89 +19,89 @@ import java.util.function.Consumer;
 @Slf4j
 @Service
 public class IMRoomServiceImpl implements IMRoomService {
-    private EMService emService = IM.server();
+    private EMService emService = IM.emService;
     @Override
     public Result addRoomMember(String roomId, String username) {
-        return Result.success(emService.room().addRoomMember(roomId, "meet"+username));
+        return Result.success(IM.emService.room().addRoomMember(roomId, "meet"+username));
     }
 
     @Override
     public String createRoom(String name, String description, String owner, List<String> members, int maxMembers) {
-        return emService.room().createRoom(name, description, "meet"+owner, members, maxMembers).block();
+        return IM.emService.room().createRoom(name, description, "meet"+owner, members, maxMembers).block();
     }
 
     @Override
     public Result demoteRoomAdmin(String roomId, String username) {
-        return Result.success(emService.room().demoteRoomAdmin(roomId, "meet"+username));
+        return Result.success(IM.emService.room().demoteRoomAdmin(roomId, "meet"+username));
     }
 
     @Override
     public Result demoteRoomSuperAdmin(String username) {
-        return Result.success(emService.room().demoteRoomSuperAdmin("meet"+username));
+        return Result.success(IM.emService.room().demoteRoomSuperAdmin("meet"+username));
     }
 
     @Override
     public Result destroyRoom(String roomId) {
-        return Result.success(emService.room().destroyRoom(roomId));
+        return Result.success(IM.emService.room().destroyRoom(roomId));
     }
 
     @Override
     public Result getRoom(String id) {
-        return Result.success(emService.room().getRoom(id));
+        return Result.success(IM.emService.room().getRoom(id));
     }
 
     @Override
     public Result listRoomAdminsAll(String roomId) {
-        return Result.success(emService.room().listRoomAdminsAll(roomId));
+        return Result.success(IM.emService.room().listRoomAdminsAll(roomId));
     }
 
     @Override
     public Result listRoomMembers(String roomId, int limit, String cursor) {
-        return Result.success(emService.room().listRoomMembers(roomId, limit, cursor));
+        return Result.success(IM.emService.room().listRoomMembers(roomId, limit, cursor));
     }
 
     @Override
     public List<String> listRoomMembersAll(String roomId) {
-        return emService.room().listRoomAdminsAll(roomId).collectList().block();
+        return IM.emService.room().listRoomAdminsAll(roomId).collectList().block();
     }
 
     @Override
     public Result listRooms(int limit, String cursor) {
-        return Result.success(emService.room().listRooms(limit, cursor));
+        return Result.success(IM.emService.room().listRooms(limit, cursor));
     }
 
     @Override
     public Result listRoomsAll() {
-        return Result.success(emService.room().listRoomsAll());
+        return Result.success(IM.emService.room().listRoomsAll());
     }
 
     @Override
     public Result listRoomSuperAdminsAll() {
-        return Result.success(emService.room().listRoomSuperAdminsAll());
+        return Result.success(IM.emService.room().listRoomSuperAdminsAll());
     }
 
     @Override
     public Result listRoomsUserJoined(String username) {
-        return Result.success(emService.room().listRoomsUserJoined("meet"+username));
+        return Result.success(IM.emService.room().listRoomsUserJoined("meet"+username));
     }
 
     @Override
     public Result promoteRoomAdmin(String roomId, String username) {
-        return Result.success(emService.room().promoteRoomAdmin(roomId, username));
+        return Result.success(IM.emService.room().promoteRoomAdmin(roomId, username));
     }
 
     @Override
     public Result promoteRoomSuperAdmin(String username) {
-        return Result.success(emService.room().promoteRoomSuperAdmin(username));
+        return Result.success(IM.emService.room().promoteRoomSuperAdmin(username));
     }
 
     @Override
     public Result removeRoomMember(String roomId, String username) {
-        return Result.success(emService.room().removeRoomMember(roomId, username));
+        return Result.success(IM.emService.room().removeRoomMember(roomId, username));
     }
 
     @Override
     public Result updateRoom(String id, Consumer<UpdateRoomRequest> customizer) {
-        return Result.success(emService.room().updateRoom(id, customizer));
+        return Result.success(IM.emService.room().updateRoom(id, customizer));
     }
 }

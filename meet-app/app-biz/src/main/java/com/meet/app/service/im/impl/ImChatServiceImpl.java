@@ -12,6 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ImChatServiceImpl implements ImChatService{
     public void sss(){
-        IM.server();
+//        IM.emService;
     }
 }

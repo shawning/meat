@@ -112,7 +112,7 @@ public class BizTagsServiceImpl extends ServiceImpl<BizTagsMapper, BizTags> impl
     @Override
     public Result detail(@NonNull Long id){
 //        Void a1 = IM.server().user().create("xiao","12345").block();
-        EMUser a = IM.server().user().get("xiao").block();
+        EMUser a = IM.emService.user().get("xiao").block();
     String name = a.getUsername();
         QueryWrapper<BizTags> query = new QueryWrapper<>();
         query.eq("ID", id);
